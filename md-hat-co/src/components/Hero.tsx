@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useCallback } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { Antlers, ArrowRight } from "@/components/Icons";
 
-const PRODUCT = "/products/ChatGPT Image Jun 29, 2026 at 02_00_31 PM.png";
+// The MD antler mark, as drawable strokes (pathLength-normalized for the
+// draw-on). Mirrors the Antlers icon but lives here so GSAP can animate it.
+const ANTLER_D =
+  "M24 44V22M24 22c0-4-3-6-3-10 0-3 1.5-5 1.5-8M24 22c0-4 3-6 3-10 0-3-1.5-5-1.5-8 M21 12c-2.5 1-4 0-6-2M27 12c2.5 1 4 0 6-2 M21.5 18c-3 1.5-5.5 1-8.5-1.5M26.5 18c3 1.5 5.5 1 8.5-1.5 M24 22c-3.5 2-6 1.5-9.5-1M24 22c3.5 2 6 1.5 9.5-1";
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -20,6 +22,8 @@ export default function Hero() {
   const specRef = useRef<HTMLDivElement>(null);
   const productRef = useRef<HTMLDivElement>(null);
   const tiltRef = useRef<HTMLDivElement>(null);
+  const antlerRef = useRef<SVGPathElement>(null);
+  const sewRef = useRef<SVGCircleElement>(null);
   const cta1Ref = useRef<HTMLAnchorElement>(null);
   const cta2Ref = useRef<HTMLAnchorElement>(null);
 
@@ -51,6 +55,7 @@ export default function Hero() {
     if (reduce) {
       gsap.set([eyebrowRef.current, headlineRef.current, subRef.current, ctaRef.current,
                 specRef.current, productRef.current, ...lines], { opacity: 1, x: 0, y: 0, scale: 1 });
+      gsap.set([antlerRef.current, sewRef.current], { strokeDashoffset: 0 }); // patch fully tooled + sewn
       return;
     }
 
@@ -61,11 +66,15 @@ export default function Hero() {
     gsap.set(ctaRef.current, { opacity: 0, y: 16 });
     gsap.set(specRef.current, { opacity: 0, y: 12 });
     gsap.set(productRef.current, { opacity: 0, scale: 0.86, y: 26 });
+    gsap.set([antlerRef.current, sewRef.current], { strokeDashoffset: 1 }); // un-drawn
 
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
     tl.to(productRef.current, { opacity: 1, scale: 1, y: 0, duration: 1.1, ease: "power2.out" }, 0.1)
       .to(eyebrowRef.current, { opacity: 1, x: 0, duration: 0.6 }, 0.35)
       .to(lines, { opacity: 1, y: 0, duration: 0.85, stagger: 0.12, ease: "power3.out" }, 0.45)
+      // The patch comes to life: antler mark tools in, then the stitch sews the rim.
+      .to(antlerRef.current, { strokeDashoffset: 0, duration: 0.95, ease: "power1.inOut" }, 0.7)
+      .to(sewRef.current, { strokeDashoffset: 0, duration: 1.15, ease: "power1.inOut" }, 1.25)
       .to(subRef.current, { opacity: 1, y: 0, duration: 0.7 }, 1.05)
       .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.6 }, 1.25)
       .to(specRef.current, { opacity: 1, y: 0, duration: 0.6 }, 1.4);
@@ -194,11 +203,12 @@ export default function Hero() {
           style={{ perspective: "1100px" }}>
           <div ref={tiltRef} className="relative w-[min(86vw,460px)] aspect-square"
             style={{ transformStyle: "preserve-3d" }}>
-            {/* Warm spotlight glow behind the hat (blaze accent from the product) */}
-            <div aria-hidden className="absolute inset-0 pointer-events-none"
-              style={{ background: "radial-gradient(circle at 50% 46%, rgba(212,108,40,0.42) 0%, rgba(106,111,67,0.16) 34%, transparent 62%)", filter: "blur(10px)" }} />
-            {/* Rotating stamp ring — circular brand text, the signature mark */}
-            <div aria-hidden className="absolute inset-[4%] motion-safe:animate-[spin_38s_linear_infinite] opacity-60"
+            {/* Warm spotlight glow — blaze accent, slow breathing pulse */}
+            <div aria-hidden className="absolute inset-0 pointer-events-none motion-safe:[animation:glowPulse_6s_ease-in-out_infinite]"
+              style={{ background: "radial-gradient(circle at 50% 47%, rgba(212,108,40,0.42) 0%, rgba(106,111,67,0.16) 34%, transparent 62%)", filter: "blur(10px)" }} />
+
+            {/* Rotating stamp ring — circular brand text */}
+            <div aria-hidden className="absolute inset-[2%] motion-safe:animate-[spin_38s_linear_infinite] opacity-60"
               style={{ animationName: "spin" }}>
               <svg viewBox="0 0 200 200" className="w-full h-full">
                 <defs>
@@ -211,24 +221,73 @@ export default function Hero() {
                 </text>
               </svg>
             </div>
-            {/* Dashed inner ring */}
-            <div aria-hidden className="absolute inset-[12%] rounded-full border border-dashed border-[#C7B291]/25" />
 
-            {/* The hat — radial mask floats it off the white background */}
-            <div className="absolute inset-[6%]"
-              style={{
-                WebkitMaskImage: "radial-gradient(ellipse 58% 56% at 50% 47%, #000 46%, transparent 72%)",
-                maskImage: "radial-gradient(ellipse 58% 56% at 50% 47%, #000 46%, transparent 72%)",
-              }}>
-              <Image
-                src={PRODUCT}
-                alt="MD Hat Company blaze camo trucker with a hand-tooled leather antler patch"
-                fill
-                priority
-                sizes="(max-width: 1024px) 86vw, 460px"
-                className="object-contain drop-shadow-[0_30px_50px_rgba(0,0,0,0.55)]"
-              />
+            {/* Dashed inner ring */}
+            <div aria-hidden className="absolute inset-[11%] rounded-full border border-dashed border-[#C7B291]/25" />
+
+            {/* ── The leather patch — antler tools in, then the stitch sews the rim ── */}
+            <div className="absolute inset-[15%]">
+              <svg viewBox="0 0 200 200" className="w-full h-full overflow-visible">
+                <defs>
+                  <radialGradient id="leather" cx="40%" cy="33%" r="74%">
+                    <stop offset="0%" stopColor="#DCC9A6" />
+                    <stop offset="40%" stopColor="#BD9D6E" />
+                    <stop offset="72%" stopColor="#846035" />
+                    <stop offset="100%" stopColor="#533B23" />
+                  </radialGradient>
+                  <radialGradient id="recess" cx="50%" cy="55%" r="52%">
+                    <stop offset="55%" stopColor="#241809" stopOpacity="0" />
+                    <stop offset="100%" stopColor="#241809" stopOpacity="0.32" />
+                  </radialGradient>
+                  <filter id="discShadow" x="-30%" y="-30%" width="160%" height="160%">
+                    <feDropShadow dx="0" dy="7" stdDeviation="9" floodColor="#0b0704" floodOpacity="0.55" />
+                  </filter>
+                  <filter id="leatherGrain">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" stitchTiles="stitch" />
+                    <feColorMatrix type="saturate" values="0" />
+                    <feComponentTransfer><feFuncA type="linear" slope="0.09" /></feComponentTransfer>
+                    <feComposite operator="in" in2="SourceGraphic" />
+                  </filter>
+                  {/* Sewing reveal: this stroke draws around and unveils the stitches */}
+                  <mask id="sew">
+                    <rect width="200" height="200" fill="black" />
+                    <circle ref={sewRef} cx="100" cy="100" r="73" fill="none" stroke="#fff" strokeWidth="7"
+                      pathLength={1} strokeDasharray={1} strokeDashoffset={1} transform="rotate(-90 100 100)" />
+                  </mask>
+                </defs>
+
+                {/* Leather disc + grain + edge */}
+                <circle cx="100" cy="100" r="80" fill="url(#leather)" filter="url(#discShadow)" />
+                <circle cx="100" cy="100" r="80" fill="#000" filter="url(#leatherGrain)" opacity="0.5" />
+                <circle cx="100" cy="100" r="80" fill="none" stroke="#3A2917" strokeWidth="1.4" opacity="0.6" />
+
+                {/* Tooled groove + stamped recess */}
+                <circle cx="100" cy="100" r="70" fill="none" stroke="#4A3220" strokeWidth="1.4" opacity="0.5" />
+                <circle cx="100" cy="100" r="62" fill="url(#recess)" />
+                <circle cx="100" cy="100" r="62" fill="none" stroke="#EAD8B4" strokeWidth="1" opacity="0.16" />
+
+                {/* Running stitch — recessed shadow + bone thread, revealed by the mask */}
+                <g mask="url(#sew)">
+                  <circle cx="100" cy="100" r="73" fill="none" stroke="#2E2012" strokeWidth="3.4"
+                    strokeDasharray="2.4 5.2" strokeLinecap="round" opacity="0.45" transform="rotate(-90 100 100)" />
+                  <circle cx="100" cy="100" r="73" fill="none" stroke="#ECE0C6" strokeWidth="2.4"
+                    strokeDasharray="2.4 5.2" strokeLinecap="round" transform="rotate(-90 100 100)" />
+                </g>
+
+                {/* Antler mark — burned bold into the leather, draws on stroke-by-stroke */}
+                <g transform="translate(100 101) scale(2.15) translate(-24 -24)">
+                  <path ref={antlerRef} d={ANTLER_D} fill="none" stroke="#241710"
+                    strokeWidth="2.7" strokeLinecap="round" strokeLinejoin="round"
+                    pathLength={1} strokeDasharray={1} strokeDashoffset={1} />
+                </g>
+              </svg>
             </div>
+
+            {/* Ember motes drifting off the leather */}
+            <span aria-hidden className="absolute left-[20%] top-[16%] w-1.5 h-1.5 rounded-full bg-[#C77B3B] opacity-0 motion-safe:[animation:emberFloat_6.5s_ease-in-out_infinite]" style={{ animationDelay: "0.3s" }} />
+            <span aria-hidden className="absolute right-[18%] top-[24%] w-1 h-1 rounded-full bg-[#C7B291] opacity-0 motion-safe:[animation:emberFloat_7.5s_ease-in-out_infinite]" style={{ animationDelay: "1.4s" }} />
+            <span aria-hidden className="absolute left-[30%] bottom-[20%] w-1 h-1 rounded-full bg-[#C77B3B] opacity-0 motion-safe:[animation:emberFloat_8s_ease-in-out_infinite]" style={{ animationDelay: "2.6s" }} />
+            <span aria-hidden className="absolute right-[26%] bottom-[26%] w-1.5 h-1.5 rounded-full bg-[#C7B291] opacity-0 motion-safe:[animation:emberFloat_7s_ease-in-out_infinite]" style={{ animationDelay: "3.7s" }} />
 
             {/* Floating spec chip */}
             <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 lg:left-auto lg:right-[2%] lg:translate-x-0 bg-[#211A12]/85 backdrop-blur-sm border border-[#6B4F33]/50 px-4 py-2.5 flex items-center gap-2.5">

@@ -55,6 +55,17 @@ h1, h2, h3, h4, h5, h6 {
   filter: drop-shadow(0 2px 7px rgba(0, 0, 0, 0.55));
 }
 
+/* Hero leather-patch ambient */
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.82; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.05); }
+}
+@keyframes emberFloat {
+  0%   { opacity: 0; transform: translateY(10px) scale(0.8); }
+  25%  { opacity: 0.75; }
+  100% { opacity: 0; transform: translateY(-30px) scale(1); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
