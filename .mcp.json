@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "base-mcp": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/Users/andrewmillwood/Desktop/morgan hat website/.base/base-mcp/index.js"]
+    }
+  }
+}

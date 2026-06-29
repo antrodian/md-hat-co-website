@@ -1,0 +1,27 @@
+# BASE MCP
+.base/base-mcp/node_modules/
+
+# Next.js
+md-hat-co/.next/
+md-hat-co/out/
+md-hat-co/node_modules/
+
+# Env files
+.env
+.env.local
+.env*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor
+.vscode/
+.idea/
+
+# Build info
+md-hat-co/tsconfig.tsbuildinfo

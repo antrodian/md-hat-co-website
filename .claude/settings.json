@@ -1,0 +1,22 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          { "type": "command", "command": "/usr/bin/python3 \"/Users/andrewmillwood/Desktop/morgan hat website/.base/hooks/active-hook.py\"" },
+          { "type": "command", "command": "/usr/bin/python3 \"/Users/andrewmillwood/Desktop/morgan hat website/.base/hooks/backlog-hook.py\"" },
+          { "type": "command", "command": "/usr/bin/python3 \"/Users/andrewmillwood/Desktop/morgan hat website/.base/hooks/base-pulse-check.py\"" },
+          { "type": "command", "command": "/usr/bin/python3 \"/Users/andrewmillwood/Desktop/morgan hat website/.base/hooks/psmm-injector.py\"" },
+          { "type": "command", "command": "/usr/bin/python3 \"/Users/andrewmillwood/Desktop/morgan hat website/.base/hooks/operator-hook.py\"" }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          { "type": "command", "command": "/usr/bin/python3 \"/Users/andrewmillwood/Desktop/morgan hat website/.base/hooks/satellite-detection.py\"" }
+        ]
+      }
+    ]
+  }
+}

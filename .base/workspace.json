@@ -1,0 +1,118 @@
+{
+  "workspace": "morgan-hat-website",
+  "created": "2026-06-28",
+  "groom_cadence": "bi-weekly",
+  "groom_day": "Friday",
+  "areas": {
+    "source": {
+      "type": "directory",
+      "description": "Website source code",
+      "paths": ["src/"],
+      "groom": "bi-weekly",
+      "audit": {
+        "strategy": "staleness",
+        "config": {}
+      }
+    },
+    "public": {
+      "type": "directory",
+      "description": "Public assets and output",
+      "paths": ["public/"],
+      "groom": "bi-weekly",
+      "audit": {
+        "strategy": "staleness",
+        "config": {}
+      }
+    },
+    "content": {
+      "type": "directory",
+      "description": "Content, copy, and media for the hat brand",
+      "paths": ["content/"],
+      "groom": "bi-weekly",
+      "audit": {
+        "strategy": "pipeline-status",
+        "config": {}
+      }
+    },
+    "config": {
+      "type": "config-cross-ref",
+      "description": "Project config files",
+      "paths": ["*.config.*", ".env*", "package.json"],
+      "groom": "bi-weekly",
+      "audit": {
+        "strategy": "cross-reference",
+        "config": {}
+      }
+    }
+  },
+  "carl_hygiene": {
+    "proactive": true,
+    "cadence": "monthly",
+    "staleness_threshold_days": 60,
+    "max_rules_per_domain": 15,
+    "last_run": null
+  },
+  "surfaces": {
+    "projects": {
+      "file": "data/projects.json",
+      "description": "Active work and backlog tracking",
+      "hook": true,
+      "silent": true,
+      "schema": {
+        "id_prefix": "PROJ",
+        "required_fields": ["id", "title", "status", "priority"],
+        "priority_levels": ["critical", "high", "medium", "low"],
+        "status_values": ["active", "blocked", "backlog", "done"]
+      }
+    },
+    "entities": {
+      "file": "data/entities.json",
+      "description": "People, organizations, systems",
+      "hook": false,
+      "silent": true,
+      "schema": {
+        "id_prefix": "ENT",
+        "required_fields": ["id", "name", "type"],
+        "priority_levels": [],
+        "status_values": ["active", "inactive"]
+      }
+    },
+    "state": {
+      "file": "data/state.json",
+      "description": "Workspace health, drift, groom tracking",
+      "hook": false,
+      "silent": true,
+      "schema": {
+        "id_prefix": "STATE",
+        "required_fields": ["last_groomed", "drift_score"],
+        "priority_levels": [],
+        "status_values": []
+      }
+    },
+    "psmm": {
+      "file": "data/psmm.json",
+      "description": "Per-session meta memory",
+      "hook": true,
+      "silent": true,
+      "schema": {
+        "id_prefix": "PSMM",
+        "required_fields": ["session_id", "context"],
+        "priority_levels": [],
+        "status_values": []
+      }
+    },
+    "staging": {
+      "file": "data/staging.json",
+      "description": "Proposed changes staging",
+      "hook": false,
+      "silent": true,
+      "schema": {
+        "id_prefix": "STG",
+        "required_fields": ["id", "description", "status"],
+        "priority_levels": [],
+        "status_values": ["proposed", "approved", "rejected"]
+      }
+    }
+  },
+  "satellites": {}
+}

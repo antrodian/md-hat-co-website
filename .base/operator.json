@@ -1,0 +1,47 @@
+{
+  "operator": {
+    "name": "Andrew",
+    "role": "Web developer / builder",
+    "completed_at": "2026-06-28"
+  },
+  "deep_why": {
+    "answers": [
+      "Building a website for his sister's custom hat company — she buys blank hats and sews custom leather patches onto them.",
+      "She is paying him and he enjoys building websites.",
+      "The business outcome is secondary — Andrew is not actively involved beyond the build.",
+      "Wants the work to look professional, clean, and amazing. Refuses crude or shoddy output.",
+      "Perfectionist by nature — work that doesn't meet his standard reflects poorly on him as a builder. Quality is identity."
+    ],
+    "summary": "Client work for family. The deeper driver is craft pride — Andrew holds a perfectionist standard and the site must reflect that, regardless of whether the business takes off.",
+    "completed_at": "2026-06-28"
+  },
+  "north_star": {
+    "metric": "Fully functional, zero-defect deploy — all site features work without issues",
+    "timeframe": "On delivery",
+    "completed_at": "2026-06-28"
+  },
+  "key_values": {
+    "values": [
+      { "rank": 1, "name": "Polish", "meaning": "No crude output. Every detail reflects a perfectionist standard." },
+      { "rank": 2, "name": "Overall look", "meaning": "Visual quality is the primary deliverable. Must stand out from generic shop/POS sites." },
+      { "rank": 3, "name": "Good animations", "meaning": "Animations elevate the feel and tie the aesthetic together — not decoration, structure." },
+      { "rank": 4, "name": "Reliability", "meaning": "Zero-defect deploy. Everything functions. No broken flows." },
+      { "rank": 5, "name": "Speed", "meaning": "Site performance — fast load, snappy interactions." }
+    ],
+    "completed_at": "2026-06-28"
+  },
+  "elevator_pitch": {
+    "floors": {
+      "1": "A website for a custom hat company that takes blank hats and applies custom leather patches.",
+      "2": "A premium e-commerce site for a custom hat brand — built to look and feel unlike any generic shop site, with polished UI and intentional animations.",
+      "3": "Client work for family. The goal is a fully functional, visually distinctive storefront that reflects professional craft — not just another Shopify clone."
+    },
+    "completed_at": "2026-06-28"
+  },
+  "surface_vision": {
+    "scenes": [
+      "The site is live. It loads fast. The UI is immediately different from every other hat shop online — the animations are purposeful, the layout is clean, and nothing is broken. Andrew looks at it and it meets his standard. Sister can share the URL and it holds up."
+    ],
+    "completed_at": "2026-06-28"
+  }
+}
