@@ -22,8 +22,15 @@ export default function Hero() {
   const specRef = useRef<HTMLDivElement>(null);
   const productRef = useRef<HTMLDivElement>(null);
   const tiltRef = useRef<HTMLDivElement>(null);
-  const antlerRef = useRef<SVGPathElement>(null);
-  const sewRef = useRef<SVGCircleElement>(null);
+  const floatRef = useRef<HTMLDivElement>(null);
+  const antlerRef = useRef<SVGPathElement>(null);      // dark burned line
+  const antlerGlowRef = useRef<SVGPathElement>(null);  // hot orange glow that cools
+  const sewRef = useRef<SVGCircleElement>(null);       // stitch reveal mask
+  const needleRef = useRef<SVGGElement>(null);         // glowing needle point on the rim
+  const shockRef = useRef<SVGCircleElement>(null);     // stamp-press shockwave
+  const heatRef = useRef<SVGCircleElement>(null);      // branding heat bloom
+  const sheenRef = useRef<SVGRectElement>(null);       // specular sweep
+  const sparksRef = useRef<SVGGElement>(null);         // burn embers
   const cta1Ref = useRef<HTMLAnchorElement>(null);
   const cta2Ref = useRef<HTMLAnchorElement>(null);
 
@@ -55,7 +62,9 @@ export default function Hero() {
     if (reduce) {
       gsap.set([eyebrowRef.current, headlineRef.current, subRef.current, ctaRef.current,
                 specRef.current, productRef.current, ...lines], { opacity: 1, x: 0, y: 0, scale: 1 });
-      gsap.set([antlerRef.current, sewRef.current], { strokeDashoffset: 0 }); // patch fully tooled + sewn
+      // Finished patch: fully tooled + sewn, heat/motion FX off.
+      gsap.set([antlerRef.current, antlerGlowRef.current, sewRef.current], { strokeDashoffset: 0 });
+      gsap.set([antlerGlowRef.current, needleRef.current, shockRef.current, heatRef.current, sheenRef.current], { opacity: 0 });
       return;
     }
 
@@ -65,19 +74,57 @@ export default function Hero() {
     gsap.set(subRef.current, { opacity: 0, y: 20 });
     gsap.set(ctaRef.current, { opacity: 0, y: 16 });
     gsap.set(specRef.current, { opacity: 0, y: 12 });
-    gsap.set(productRef.current, { opacity: 0, scale: 0.86, y: 26 });
-    gsap.set([antlerRef.current, sewRef.current], { strokeDashoffset: 1 }); // un-drawn
+    gsap.set(productRef.current, { opacity: 0, scale: 0.7, y: 30 });
+    gsap.set([antlerRef.current, antlerGlowRef.current, sewRef.current], { strokeDashoffset: 1 });
+    gsap.set(antlerGlowRef.current, { opacity: 1 });
+    gsap.set([needleRef.current, shockRef.current, heatRef.current, sheenRef.current], { opacity: 0 });
+
+    const sparks = sparksRef.current ? Array.from(sparksRef.current.children) : [];
+    gsap.set(sparks, { opacity: 0 });
 
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-    tl.to(productRef.current, { opacity: 1, scale: 1, y: 0, duration: 1.1, ease: "power2.out" }, 0.1)
-      .to(eyebrowRef.current, { opacity: 1, x: 0, duration: 0.6 }, 0.35)
-      .to(lines, { opacity: 1, y: 0, duration: 0.85, stagger: 0.12, ease: "power3.out" }, 0.45)
-      // The patch comes to life: antler mark tools in, then the stitch sews the rim.
-      .to(antlerRef.current, { strokeDashoffset: 0, duration: 0.95, ease: "power1.inOut" }, 0.7)
-      .to(sewRef.current, { strokeDashoffset: 0, duration: 1.15, ease: "power1.inOut" }, 1.25)
-      .to(subRef.current, { opacity: 1, y: 0, duration: 0.7 }, 1.05)
-      .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.6 }, 1.25)
-      .to(specRef.current, { opacity: 1, y: 0, duration: 0.6 }, 1.4);
+
+    // 1) Stamp-press — blank disc lands with overshoot, shockwave ripples out.
+    tl.to(productRef.current, { opacity: 1, scale: 1, y: 0, duration: 0.9, ease: "back.out(1.7)" }, 0.1)
+      .fromTo(shockRef.current,
+        { attr: { r: 48 }, opacity: 0.6, strokeWidth: 3 },
+        { attr: { r: 104 }, opacity: 0, strokeWidth: 0.4, duration: 0.85, ease: "power2.out" }, 0.62)
+
+    // 2) Copy rises in.
+      .to(eyebrowRef.current, { opacity: 1, x: 0, duration: 0.6 }, 0.4)
+      .to(lines, { opacity: 1, y: 0, duration: 0.85, stagger: 0.12, ease: "power3.out" }, 0.5)
+
+    // 3) Branding iron — heat bloom, antler burns on hot, embers fly, then cools to dark.
+      .to(heatRef.current, { opacity: 0.78, duration: 0.45, ease: "power2.out" }, 0.95)
+      .to([antlerGlowRef.current, antlerRef.current], { strokeDashoffset: 0, duration: 1.05, ease: "power1.inOut" }, 1.0)
+      .fromTo(sparks,
+        { opacity: 0.95, y: 5, scale: 1 },
+        { opacity: 0, y: -24, scale: 0.35, stagger: 0.06, duration: 0.95, ease: "power1.out" }, 1.5)
+      .to(heatRef.current, { opacity: 0, duration: 0.9, ease: "power2.out" }, 1.95)
+      .to(antlerGlowRef.current, { opacity: 0, duration: 0.95, ease: "power2.out" }, 2.05)
+
+    // 4) Needle sews the rim — a glowing point leads the stitch reveal around.
+      .set(needleRef.current, { opacity: 1 }, 2.0)
+      .to(sewRef.current, { strokeDashoffset: 0, duration: 1.25, ease: "power2.inOut" }, 2.0)
+      .to(needleRef.current, { rotation: 360, svgOrigin: "100 100", duration: 1.25, ease: "power2.inOut" }, 2.0)
+      .to(needleRef.current, { opacity: 0, duration: 0.4, ease: "power1.out" }, 3.05)
+
+    // 5) Remaining copy.
+      .to(subRef.current, { opacity: 1, y: 0, duration: 0.7 }, 1.1)
+      .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.6 }, 1.3)
+      .to(specRef.current, { opacity: 1, y: 0, duration: 0.6 }, 1.5);
+
+    // ── Idle loops — keep the patch alive after the build ──
+    // Specular sheen sweeping across the domed leather.
+    const sheenTl = gsap.timeline({ repeat: -1, repeatDelay: 4.2, delay: 3.4 });
+    sheenTl.fromTo(sheenRef.current, { x: -120, opacity: 0 }, { opacity: 0.58, duration: 0.35, ease: "power1.in" }, 0)
+      .to(sheenRef.current, { x: 150, duration: 1.5, ease: "sine.inOut" }, 0)
+      .to(sheenRef.current, { opacity: 0, duration: 0.45, ease: "power1.out" }, 1.05);
+
+    // Gentle 3D float so it breathes at rest.
+    const floatTw = gsap.to(floatRef.current, {
+      y: -7, rotation: 1.1, duration: 3.8, ease: "sine.inOut", repeat: -1, yoyo: true, delay: 2.6,
+    });
 
     // Cursor parallax on the product
     const onMouseMove = (e: MouseEvent) => {
@@ -94,6 +141,9 @@ export default function Hero() {
     const c2 = makeMagnetic(cta2Ref.current);
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
+      tl.kill();
+      sheenTl.kill();
+      floatTw.kill();
       c1?.();
       c2?.();
     };
@@ -222,25 +272,40 @@ export default function Hero() {
               </svg>
             </div>
 
-            {/* Dashed inner ring */}
-            <div aria-hidden className="absolute inset-[11%] rounded-full border border-dashed border-[#C7B291]/25" />
+            {/* Dashed inner ring — slow counter-rotation */}
+            <div aria-hidden className="absolute inset-[11%] rounded-full border border-dashed border-[#C7B291]/25 motion-safe:[animation:spin_52s_linear_infinite_reverse]" />
 
-            {/* ── The leather patch — antler tools in, then the stitch sews the rim ── */}
-            <div className="absolute inset-[15%]">
+            {/* ── The leather patch: pressed in, branded, then sewn ── */}
+            <div ref={floatRef} className="absolute inset-[15%]">
               <svg viewBox="0 0 200 200" className="w-full h-full overflow-visible">
                 <defs>
-                  <radialGradient id="leather" cx="40%" cy="33%" r="74%">
-                    <stop offset="0%" stopColor="#DCC9A6" />
-                    <stop offset="40%" stopColor="#BD9D6E" />
-                    <stop offset="72%" stopColor="#846035" />
-                    <stop offset="100%" stopColor="#533B23" />
+                  <radialGradient id="leather" cx="40%" cy="32%" r="76%">
+                    <stop offset="0%" stopColor="#E4D3B0" />
+                    <stop offset="38%" stopColor="#C2A375" />
+                    <stop offset="72%" stopColor="#87663A" />
+                    <stop offset="100%" stopColor="#4C3520" />
                   </radialGradient>
-                  <radialGradient id="recess" cx="50%" cy="55%" r="52%">
-                    <stop offset="55%" stopColor="#241809" stopOpacity="0" />
-                    <stop offset="100%" stopColor="#241809" stopOpacity="0.32" />
+                  <linearGradient id="bevel" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#EBDAB6" />
+                    <stop offset="48%" stopColor="#A98A5E" />
+                    <stop offset="100%" stopColor="#3E2C19" />
+                  </linearGradient>
+                  <radialGradient id="recess" cx="50%" cy="56%" r="54%">
+                    <stop offset="52%" stopColor="#241809" stopOpacity="0" />
+                    <stop offset="100%" stopColor="#1d1206" stopOpacity="0.42" />
                   </radialGradient>
-                  <filter id="discShadow" x="-30%" y="-30%" width="160%" height="160%">
-                    <feDropShadow dx="0" dy="7" stdDeviation="9" floodColor="#0b0704" floodOpacity="0.55" />
+                  <radialGradient id="heatGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#FFD9A0" />
+                    <stop offset="38%" stopColor="#FF7A18" />
+                    <stop offset="100%" stopColor="#FF7A18" stopOpacity="0" />
+                  </radialGradient>
+                  <linearGradient id="sheenGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#fff" stopOpacity="0" />
+                    <stop offset="50%" stopColor="#fff" stopOpacity="0.9" />
+                    <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+                  </linearGradient>
+                  <filter id="discShadow" x="-40%" y="-40%" width="180%" height="180%">
+                    <feDropShadow dx="0" dy="8" stdDeviation="10" floodColor="#0b0704" floodOpacity="0.6" />
                   </filter>
                   <filter id="leatherGrain">
                     <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" stitchTiles="stitch" />
@@ -248,6 +313,10 @@ export default function Hero() {
                     <feComponentTransfer><feFuncA type="linear" slope="0.09" /></feComponentTransfer>
                     <feComposite operator="in" in2="SourceGraphic" />
                   </filter>
+                  <filter id="softGlow" x="-80%" y="-80%" width="260%" height="260%">
+                    <feGaussianBlur stdDeviation="2.4" />
+                  </filter>
+                  <clipPath id="discClip"><circle cx="100" cy="100" r="80" /></clipPath>
                   {/* Sewing reveal: this stroke draws around and unveils the stitches */}
                   <mask id="sew">
                     <rect width="200" height="200" fill="black" />
@@ -256,10 +325,20 @@ export default function Hero() {
                   </mask>
                 </defs>
 
-                {/* Leather disc + grain + edge */}
+                {/* Disc body + grain */}
                 <circle cx="100" cy="100" r="80" fill="url(#leather)" filter="url(#discShadow)" />
-                <circle cx="100" cy="100" r="80" fill="#000" filter="url(#leatherGrain)" opacity="0.5" />
-                <circle cx="100" cy="100" r="80" fill="none" stroke="#3A2917" strokeWidth="1.4" opacity="0.6" />
+                <circle cx="100" cy="100" r="80" fill="#000" filter="url(#leatherGrain)" opacity="0.5" clipPath="url(#discClip)" />
+
+                {/* Raised beveled rim */}
+                <circle cx="100" cy="100" r="76.5" fill="none" stroke="url(#bevel)" strokeWidth="6" />
+                <circle cx="100" cy="100" r="80" fill="none" stroke="#3A2917" strokeWidth="1.2" opacity="0.7" />
+
+                {/* Specular sheen sweep (clipped to the disc) */}
+                <g clipPath="url(#discClip)">
+                  <g transform="rotate(20 100 100)" style={{ mixBlendMode: "overlay" }}>
+                    <rect ref={sheenRef} x="74" y="-30" width="42" height="260" fill="url(#sheenGrad)" opacity="0" />
+                  </g>
+                </g>
 
                 {/* Tooled groove + stamped recess */}
                 <circle cx="100" cy="100" r="70" fill="none" stroke="#4A3220" strokeWidth="1.4" opacity="0.5" />
@@ -274,12 +353,37 @@ export default function Hero() {
                     strokeDasharray="2.4 5.2" strokeLinecap="round" transform="rotate(-90 100 100)" />
                 </g>
 
-                {/* Antler mark — burned bold into the leather, draws on stroke-by-stroke */}
+                {/* Branding heat bloom — rises during the burn, then cools off */}
+                <circle ref={heatRef} cx="100" cy="101" r="34" fill="url(#heatGrad)" opacity="0" filter="url(#softGlow)" />
+
+                {/* Antler mark — hot glow draws on, dark burn follows, glow then cools */}
                 <g transform="translate(100 101) scale(2.15) translate(-24 -24)">
-                  <path ref={antlerRef} d={ANTLER_D} fill="none" stroke="#241710"
-                    strokeWidth="2.7" strokeLinecap="round" strokeLinejoin="round"
+                  <path ref={antlerGlowRef} d={ANTLER_D} fill="none" stroke="#FF8A24" strokeWidth="3.4"
+                    strokeLinecap="round" strokeLinejoin="round" filter="url(#softGlow)"
+                    pathLength={1} strokeDasharray={1} strokeDashoffset={1} />
+                  <path ref={antlerRef} d={ANTLER_D} fill="none" stroke="#241710" strokeWidth="2.7"
+                    strokeLinecap="round" strokeLinejoin="round"
                     pathLength={1} strokeDasharray={1} strokeDashoffset={1} />
                 </g>
+
+                {/* Burn embers */}
+                <g ref={sparksRef}>
+                  <circle cx="92" cy="86" r="1.6" fill="#FFC074" />
+                  <circle cx="108" cy="92" r="1.3" fill="#FF9A3C" />
+                  <circle cx="96" cy="108" r="1.5" fill="#FFD79E" />
+                  <circle cx="110" cy="112" r="1.2" fill="#FF9A3C" />
+                  <circle cx="100" cy="80" r="1.3" fill="#FFC074" />
+                  <circle cx="89" cy="100" r="1.1" fill="#FFD79E" />
+                </g>
+
+                {/* Glowing needle point leading the stitch around the rim */}
+                <g ref={needleRef} opacity="0">
+                  <circle cx="100" cy="27" r="3.6" fill="#FFF4DE" filter="url(#softGlow)" />
+                  <circle cx="100" cy="27" r="1.7" fill="#fff" />
+                </g>
+
+                {/* Stamp-press shockwave */}
+                <circle ref={shockRef} cx="100" cy="100" r="48" fill="none" stroke="#E5D2A6" strokeWidth="3" opacity="0" />
               </svg>
             </div>
 
