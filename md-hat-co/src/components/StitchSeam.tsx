@@ -8,7 +8,7 @@ import { motion, useInView } from "framer-motion";
 export default function StitchSeam({ tone = "tan" }: { tone?: "tan" | "cream" }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
-  const color = tone === "cream" ? "#F2E9DD" : "#C67C3D";
+  const color = tone === "cream" ? "#F2EEE6" : "#6B4F33";
 
   return (
     <div ref={ref} className="absolute top-9 left-0 right-0 px-6 z-10 pointer-events-none" aria-hidden>

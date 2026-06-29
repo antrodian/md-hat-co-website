@@ -1,29 +1,26 @@
 import type { Metadata } from "next";
-import { Playfair_Display_SC, Montserrat, Zilla_Slab } from "next/font/google";
+import { Roboto_Slab, Montserrat } from "next/font/google";
 import "./globals.css";
 
-const playfair = Playfair_Display_SC({
-  variable: "--font-playfair",
+// Heading face — robust slab, the closest Google Fonts match to the brand's
+// "Robusta Slab". Heavy weights only; no thin hairlines.
+const robotoSlab = Roboto_Slab({
+  variable: "--font-roboto-slab",
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
+// Body face — per brand guidelines.
 const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
 });
 
-// Heavy slab display — rugged, thick, no thin hairlines. Hero headline.
-const zilla = Zilla_Slab({
-  variable: "--font-zilla",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-});
-
 export const metadata: Metadata = {
-  title: "MD Hat Co. | Leather Patch Hats",
-  description: "Premium leather patch hats built for the outdoors and shaped by craftsmanship. Authentic. Durable. Polished style for every trail and town.",
+  title: "MD Hat Company | Custom Hats. Built for the Hunt.",
+  description:
+    "Premium blank hats finished with hand-crafted custom leather patches. Rooted in hunting tradition and Southern craftsmanship. Built for the outdoors. Est. 2023.",
 };
 
 export default function RootLayout({
@@ -32,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${montserrat.variable} ${zilla.variable} h-full`}>
+    <html lang="en" className={`${robotoSlab.variable} ${montserrat.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased">{children}</body>
     </html>
   );

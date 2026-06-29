@@ -1,51 +1,58 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-oxblood: #8B1D1D;
-  --color-saddle: #3B2314;
-  --color-leather: #C67C3D;
-  --color-cream: #F2E9DD;
-  --color-charcoal: #2B2520;
-  --color-warm-gray: #8C857C;
+  /* ── MD Hat Company brand palette (exact brand-guideline hex) ── */
+  --color-bone:      #F2EEE6; /* page background, light text          */
+  --color-darkbrown: #2E251B; /* primary text, dark elements          */
+  --color-bark:      #6B4F33; /* secondary CTA, warm accents          */
+  --color-moss:      #3E4B34; /* primary CTA                          */
+  --color-olive:     #6A6F43; /* highlights, hover                    */
+  --color-tan:       #C7B291; /* soft highlights, borders, captions   */
+  --color-camogreen: #2F3F2E; /* deep surfaces                        */
+  --color-charcoal:  #3A3A3A; /* neutral dark                         */
 
-  --font-heading: var(--font-playfair);
-  --font-body: var(--font-montserrat);
+  /* deeper near-blacks for layered dark surfaces (derived, not new brand colors) */
+  --color-timber:    #211A12; /* hero / nav base                      */
+  --color-bark-700:  #543d27; /* bark hover                           */
+
+  --font-heading: var(--font-roboto-slab);
+  --font-body:    var(--font-montserrat);
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
-  background: #F2E9DD;
-  color: #3B2314;
+  background: #F2EEE6;
+  color: #2E251B;
   font-family: var(--font-montserrat), sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-playfair), serif;
+  font-family: var(--font-roboto-slab), serif;
 }
 
-::selection {
-  background: #8B1D1D;
-  color: #F2E9DD;
-}
+::selection { background: #3E4B34; color: #F2EEE6; }
 
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #F2E9DD;
-}
-::-webkit-scrollbar-thumb {
-  background: #C67C3D;
-  border-radius: 3px;
+::-webkit-scrollbar { width: 7px; }
+::-webkit-scrollbar-track { background: #211A12; }
+::-webkit-scrollbar-thumb { background: #6B4F33; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #6A6F43; }
+
+/* Camo-filled text — echoes the brand's camo "MD" monogram. Apply to one accent word.
+   Uses the tan-dominant variant so it reads as light camo on dark surfaces. */
+.camo-text {
+  background-image: url(/camo-light.svg);
+  background-size: 150% 150%;
+  background-position: center;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 2px 7px rgba(0, 0, 0, 0.55));
 }
 
 @media (prefers-reduced-motion: reduce) {

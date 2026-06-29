@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ArrowRight } from "@/components/Icons";
 
 type FormData = {
   name: string;
@@ -16,26 +17,21 @@ type FormData = {
 };
 
 const INITIAL: FormData = {
-  name: "",
-  email: "",
-  phone: "",
-  hatStyle: "",
-  hatColor: "",
-  patchShape: "",
-  patchDescription: "",
-  patchText: "",
-  quantity: "1",
-  notes: "",
+  name: "", email: "", phone: "", hatStyle: "", hatColor: "",
+  patchShape: "", patchDescription: "", patchText: "", quantity: "1", notes: "",
 };
 
 const inputClass =
-  "w-full bg-transparent border border-[#C67C3D]/20 text-[#F2E9DD] px-4 py-3 text-sm tracking-wide placeholder-[#8C857C]/50 focus:outline-none focus:border-[#C67C3D] transition-colors duration-200";
+  "w-full bg-transparent border border-[#6B4F33]/30 text-[#F2EEE6] px-4 py-3 text-sm tracking-wide placeholder-[#C7B291]/40 focus:outline-none focus:border-[#6A6F43] transition-colors duration-200";
 
 const labelClass =
-  "block text-[#C67C3D] text-[10px] tracking-[0.35em] uppercase mb-2";
+  "block text-[#C7B291] text-[10px] tracking-[0.32em] uppercase mb-2";
 
 const selectClass =
-  "w-full bg-[#2B2520] border border-[#C67C3D]/20 text-[#F2E9DD] px-4 py-3 text-sm tracking-wide focus:outline-none focus:border-[#C67C3D] transition-colors duration-200 appearance-none cursor-pointer";
+  "w-full bg-[#211A12] border border-[#6B4F33]/30 text-[#F2EEE6] px-4 py-3 text-sm tracking-wide focus:outline-none focus:border-[#6A6F43] transition-colors duration-200 appearance-none cursor-pointer";
+
+const legendClass =
+  "text-[#F2EEE6] text-lg font-extrabold uppercase tracking-wide mb-8 pb-3 border-b border-[#6B4F33]/25 w-full";
 
 export default function CustomOrderForm() {
   const [form, setForm] = useState<FormData>(INITIAL);
@@ -52,25 +48,25 @@ export default function CustomOrderForm() {
 
   if (submitted) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center px-6 py-24 bg-[#2B2520]">
+      <div className="min-h-[60vh] flex items-center justify-center px-6 py-24 bg-[#211A12]">
         <div className="text-center max-w-md">
-          <div className="w-16 h-px bg-[#C67C3D] mx-auto mb-8" />
+          <div className="w-16 h-px bg-[#6A6F43] mx-auto mb-8" />
           <h2
-            className="text-[#F2E9DD] text-3xl font-bold mb-4"
-            style={{ fontFamily: "var(--font-playfair)" }}
+            className="text-[#F2EEE6] text-3xl font-black uppercase tracking-tight mb-4"
+            style={{ fontFamily: "var(--font-roboto-slab)" }}
           >
             Order Received.
           </h2>
           <p
-            className="text-[#8C857C] text-sm leading-[1.8] mb-8"
+            className="text-[#F2EEE6]/60 text-sm leading-[1.8] mb-8"
             style={{ fontFamily: "var(--font-montserrat)" }}
           >
-            Morgan will review your order and reach out to {form.email} within
-            48 hours to confirm details and get your custom patch started.
+            We&apos;ll review your order and reach out to {form.email} within 48
+            hours to confirm the details and get your custom patch started.
           </p>
           <button
             onClick={() => { setForm(INITIAL); setSubmitted(false); }}
-            className="text-[#C67C3D] text-xs tracking-[0.25em] uppercase border-b border-[#C67C3D]/40 hover:border-[#C67C3D] transition-colors duration-200"
+            className="text-[#C7B291] text-xs tracking-[0.24em] uppercase border-b border-[#6B4F33] hover:border-[#6A6F43] hover:text-[#F2EEE6] transition-colors duration-200 cursor-pointer"
             style={{ fontFamily: "var(--font-montserrat)" }}
           >
             Submit Another Order
@@ -82,181 +78,117 @@ export default function CustomOrderForm() {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-3xl mx-auto px-6 py-16">
-
-      {/* Section: Your Info */}
+      {/* Your Info */}
       <fieldset className="mb-14">
-        <legend
-          className="text-[#F2E9DD] text-lg font-bold mb-8 pb-3 border-b border-[#C67C3D]/20 w-full"
-          style={{ fontFamily: "var(--font-playfair)" }}
-        >
+        <legend className={legendClass} style={{ fontFamily: "var(--font-roboto-slab)" }}>
           Your Info
         </legend>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
-            <label className={labelClass}>Full Name *</label>
-            <input
-              type="text"
-              required
-              value={form.name}
-              onChange={set("name")}
-              placeholder="Your name"
-              className={inputClass}
-              style={{ fontFamily: "var(--font-montserrat)" }}
-            />
+            <label className={labelClass} htmlFor="name">Full Name *</label>
+            <input id="name" type="text" required value={form.name} onChange={set("name")}
+              placeholder="Your name" autoComplete="name" className={inputClass}
+              style={{ fontFamily: "var(--font-montserrat)" }} />
           </div>
           <div>
-            <label className={labelClass}>Email *</label>
-            <input
-              type="email"
-              required
-              value={form.email}
-              onChange={set("email")}
-              placeholder="your@email.com"
-              className={inputClass}
-              style={{ fontFamily: "var(--font-montserrat)" }}
-            />
+            <label className={labelClass} htmlFor="email">Email *</label>
+            <input id="email" type="email" required value={form.email} onChange={set("email")}
+              placeholder="your@email.com" autoComplete="email" className={inputClass}
+              style={{ fontFamily: "var(--font-montserrat)" }} />
           </div>
           <div className="sm:col-span-2">
-            <label className={labelClass}>Phone <span className="text-[#8C857C]/60 normal-case tracking-normal">— optional</span></label>
-            <input
-              type="tel"
-              value={form.phone}
-              onChange={set("phone")}
-              placeholder="(555) 000-0000"
-              className={inputClass}
-              style={{ fontFamily: "var(--font-montserrat)" }}
-            />
+            <label className={labelClass} htmlFor="phone">
+              Phone <span className="text-[#C7B291]/50 normal-case tracking-normal">— optional</span>
+            </label>
+            <input id="phone" type="tel" value={form.phone} onChange={set("phone")}
+              placeholder="(555) 000-0000" autoComplete="tel" className={inputClass}
+              style={{ fontFamily: "var(--font-montserrat)" }} />
           </div>
         </div>
       </fieldset>
 
-      {/* Section: Hat Preferences */}
+      {/* Hat Preferences */}
       <fieldset className="mb-14">
-        <legend
-          className="text-[#F2E9DD] text-lg font-bold mb-8 pb-3 border-b border-[#C67C3D]/20 w-full"
-          style={{ fontFamily: "var(--font-playfair)" }}
-        >
+        <legend className={legendClass} style={{ fontFamily: "var(--font-roboto-slab)" }}>
           Hat Preferences
         </legend>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="relative">
-            <label className={labelClass}>Hat Style *</label>
-            <select
-              required
-              value={form.hatStyle}
-              onChange={set("hatStyle")}
-              className={selectClass}
-              style={{ fontFamily: "var(--font-montserrat)" }}
-            >
+            <label className={labelClass} htmlFor="hatStyle">Hat Style *</label>
+            <select id="hatStyle" required value={form.hatStyle} onChange={set("hatStyle")}
+              className={selectClass} style={{ fontFamily: "var(--font-montserrat)" }}>
               <option value="" disabled>Select a style</option>
+              <option value="trucker">Trucker (mesh back)</option>
               <option value="structured">Structured (baseball)</option>
               <option value="unstructured">Unstructured (dad hat)</option>
-              <option value="trucker">Trucker (mesh back)</option>
               <option value="snapback">Snapback</option>
-              <option value="unsure">Not sure — let Morgan choose</option>
+              <option value="unsure">Not sure — recommend one</option>
             </select>
-            <div className="pointer-events-none absolute right-4 top-[42px] text-[#C67C3D]">↓</div>
+            <div className="pointer-events-none absolute right-4 top-[42px] text-[#6A6F43]">↓</div>
           </div>
           <div>
-            <label className={labelClass}>Hat Color *</label>
-            <input
-              type="text"
-              required
-              value={form.hatColor}
-              onChange={set("hatColor")}
-              placeholder="Black, Olive, Tan, Navy..."
-              className={inputClass}
-              style={{ fontFamily: "var(--font-montserrat)" }}
-            />
+            <label className={labelClass} htmlFor="hatColor">Hat Color / Camo *</label>
+            <input id="hatColor" type="text" required value={form.hatColor} onChange={set("hatColor")}
+              placeholder="Blaze camo, bottomland, olive, black..." className={inputClass}
+              style={{ fontFamily: "var(--font-montserrat)" }} />
           </div>
         </div>
       </fieldset>
 
-      {/* Section: Patch Design */}
+      {/* Patch Design */}
       <fieldset className="mb-14">
-        <legend
-          className="text-[#F2E9DD] text-lg font-bold mb-8 pb-3 border-b border-[#C67C3D]/20 w-full"
-          style={{ fontFamily: "var(--font-playfair)" }}
-        >
+        <legend className={legendClass} style={{ fontFamily: "var(--font-roboto-slab)" }}>
           Patch Design
         </legend>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
           <div className="relative">
-            <label className={labelClass}>Patch Shape</label>
-            <select
-              value={form.patchShape}
-              onChange={set("patchShape")}
-              className={selectClass}
-              style={{ fontFamily: "var(--font-montserrat)" }}
-            >
+            <label className={labelClass} htmlFor="patchShape">Patch Shape</label>
+            <select id="patchShape" value={form.patchShape} onChange={set("patchShape")}
+              className={selectClass} style={{ fontFamily: "var(--font-montserrat)" }}>
               <option value="">No preference</option>
+              <option value="circle">Circle</option>
               <option value="rectangle">Rectangle</option>
               <option value="oval">Oval</option>
-              <option value="circle">Circle</option>
               <option value="shield">Shield</option>
               <option value="custom">Custom shape</option>
             </select>
-            <div className="pointer-events-none absolute right-4 top-[42px] text-[#C67C3D]">↓</div>
+            <div className="pointer-events-none absolute right-4 top-[42px] text-[#6A6F43]">↓</div>
           </div>
           <div>
-            <label className={labelClass}>Text / Initials on Patch <span className="text-[#8C857C]/60 normal-case tracking-normal">— optional</span></label>
-            <input
-              type="text"
-              value={form.patchText}
-              onChange={set("patchText")}
-              placeholder="AB, Montana, etc."
-              className={inputClass}
-              style={{ fontFamily: "var(--font-montserrat)" }}
-            />
+            <label className={labelClass} htmlFor="patchText">
+              Text / Initials <span className="text-[#C7B291]/50 normal-case tracking-normal">— optional</span>
+            </label>
+            <input id="patchText" type="text" value={form.patchText} onChange={set("patchText")}
+              placeholder="Initials, ranch name, a date..." className={inputClass}
+              style={{ fontFamily: "var(--font-montserrat)" }} />
           </div>
         </div>
         <div>
-          <label className={labelClass}>Describe Your Design *</label>
-          <textarea
-            required
-            value={form.patchDescription}
-            onChange={set("patchDescription")}
-            placeholder="What do you want on the patch? Animals, landscapes, logos, initials, a brand mark — describe it in as much or as little detail as you have."
-            rows={5}
-            className={`${inputClass} resize-none`}
-            style={{ fontFamily: "var(--font-montserrat)" }}
-          />
+          <label className={labelClass} htmlFor="patchDescription">Describe Your Design *</label>
+          <textarea id="patchDescription" required value={form.patchDescription} onChange={set("patchDescription")}
+            placeholder="Antlers, a duck, a landscape, a brand mark, initials — describe it in as much or as little detail as you have."
+            rows={5} className={`${inputClass} resize-none`} style={{ fontFamily: "var(--font-montserrat)" }} />
         </div>
       </fieldset>
 
-      {/* Section: Order Details */}
+      {/* Order Details */}
       <fieldset className="mb-14">
-        <legend
-          className="text-[#F2E9DD] text-lg font-bold mb-8 pb-3 border-b border-[#C67C3D]/20 w-full"
-          style={{ fontFamily: "var(--font-playfair)" }}
-        >
+        <legend className={legendClass} style={{ fontFamily: "var(--font-roboto-slab)" }}>
           Order Details
         </legend>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
           <div>
-            <label className={labelClass}>Quantity *</label>
-            <input
-              type="number"
-              required
-              min={1}
-              max={50}
-              value={form.quantity}
-              onChange={set("quantity")}
-              className={inputClass}
-              style={{ fontFamily: "var(--font-montserrat)" }}
-            />
+            <label className={labelClass} htmlFor="quantity">Quantity *</label>
+            <input id="quantity" type="number" required min={1} max={50}
+              value={form.quantity} onChange={set("quantity")} className={inputClass}
+              style={{ fontFamily: "var(--font-montserrat)" }} />
           </div>
         </div>
         <div>
-          <label className={labelClass}>Anything Else</label>
-          <textarea
-            value={form.notes}
-            onChange={set("notes")}
-            placeholder="Timeline, budget, reference images you'd like to share, or anything else Morgan should know."
-            rows={4}
-            className={`${inputClass} resize-none`}
-            style={{ fontFamily: "var(--font-montserrat)" }}
-          />
+          <label className={labelClass} htmlFor="notes">Anything Else</label>
+          <textarea id="notes" value={form.notes} onChange={set("notes")}
+            placeholder="Timeline, budget, reference images you'd like to share, or anything else we should know."
+            rows={4} className={`${inputClass} resize-none`} style={{ fontFamily: "var(--font-montserrat)" }} />
         </div>
       </fieldset>
 
@@ -264,16 +196,17 @@ export default function CustomOrderForm() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
         <button
           type="submit"
-          className="inline-flex items-center gap-3 bg-[#8B1D1D] hover:bg-[#C67C3D] text-[#F2E9DD] px-10 py-4 text-xs tracking-[0.2em] uppercase font-semibold transition-colors duration-300"
+          className="group inline-flex items-center gap-3 bg-[#3E4B34] hover:bg-[#6A6F43] text-[#F2EEE6] px-10 py-4 text-xs tracking-[0.18em] uppercase font-semibold transition-colors duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C7B291] focus-visible:ring-offset-2 focus-visible:ring-offset-[#211A12]"
           style={{ fontFamily: "var(--font-montserrat)" }}
         >
-          Submit Order Request →
+          Submit Order Request
+          <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
         </button>
         <p
-          className="text-[#8C857C] text-xs leading-relaxed"
+          className="text-[#F2EEE6]/45 text-xs leading-relaxed"
           style={{ fontFamily: "var(--font-montserrat)" }}
         >
-          Morgan reviews every request personally and follows up within 48 hours.
+          We review every request personally and follow up within 48 hours.
         </p>
       </div>
     </form>
