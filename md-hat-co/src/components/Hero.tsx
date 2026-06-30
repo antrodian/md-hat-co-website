@@ -5,11 +5,6 @@ import Link from "next/link";
 import { gsap } from "gsap";
 import { Antlers, ArrowRight } from "@/components/Icons";
 
-// The MD antler mark, as drawable strokes (pathLength-normalized for the
-// draw-on). Mirrors the Antlers icon but lives here so GSAP can animate it.
-const ANTLER_D =
-  "M24 44V22M24 22c0-4-3-6-3-10 0-3 1.5-5 1.5-8M24 22c0-4 3-6 3-10 0-3-1.5-5-1.5-8 M21 12c-2.5 1-4 0-6-2M27 12c2.5 1 4 0 6-2 M21.5 18c-3 1.5-5.5 1-8.5-1.5M26.5 18c3 1.5 5.5 1 8.5-1.5 M24 22c-3.5 2-6 1.5-9.5-1M24 22c3.5 2 6 1.5 9.5-1";
-
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const eyebrowRef = useRef<HTMLDivElement>(null);
@@ -23,8 +18,7 @@ export default function Hero() {
   const productRef = useRef<HTMLDivElement>(null);
   const tiltRef = useRef<HTMLDivElement>(null);
   const floatRef = useRef<HTMLDivElement>(null);
-  const antlerRef = useRef<SVGPathElement>(null);      // dark burned line
-  const antlerGlowRef = useRef<SVGPathElement>(null);  // hot orange glow that cools
+  const markRef = useRef<SVGGElement>(null);           // MD maker's mark, branded in
   const sewRef = useRef<SVGCircleElement>(null);       // stitch reveal mask
   const needleRef = useRef<SVGGElement>(null);         // glowing needle point on the rim
   const shockRef = useRef<SVGCircleElement>(null);     // stamp-press shockwave
@@ -64,8 +58,9 @@ export default function Hero() {
       gsap.set([eyebrowRef.current, headlineRef.current, subRef.current, ctaRef.current,
                 specRef.current, productRef.current, ...lines], { opacity: 1, x: 0, y: 0, scale: 1 });
       // Finished patch: fully tooled + sewn, heat/motion FX off.
-      gsap.set([antlerRef.current, antlerGlowRef.current, sewRef.current], { strokeDashoffset: 0 });
-      gsap.set([antlerGlowRef.current, needleRef.current, shockRef.current, heatRef.current, sheenRef.current, runnerRef.current], { opacity: 0 });
+      gsap.set(sewRef.current, { strokeDashoffset: 0 });
+      gsap.set(markRef.current, { opacity: 1 });
+      gsap.set([needleRef.current, shockRef.current, heatRef.current, sheenRef.current, runnerRef.current], { opacity: 0 });
       return;
     }
 
@@ -76,8 +71,8 @@ export default function Hero() {
     gsap.set(ctaRef.current, { opacity: 0, y: 16 });
     gsap.set(specRef.current, { opacity: 0, y: 12 });
     gsap.set(productRef.current, { opacity: 0, scale: 0.7, y: 30 });
-    gsap.set([antlerRef.current, antlerGlowRef.current, sewRef.current], { strokeDashoffset: 1 });
-    gsap.set(antlerGlowRef.current, { opacity: 1 });
+    gsap.set(sewRef.current, { strokeDashoffset: 1 });
+    gsap.set(markRef.current, { opacity: 0 });
     gsap.set([needleRef.current, shockRef.current, heatRef.current, sheenRef.current], { opacity: 0 });
 
     const sparks = sparksRef.current ? Array.from(sparksRef.current.children) : [];
@@ -95,14 +90,15 @@ export default function Hero() {
       .to(eyebrowRef.current, { opacity: 1, x: 0, duration: 0.6 }, 0.4)
       .to(lines, { opacity: 1, y: 0, duration: 0.85, stagger: 0.12, ease: "power3.out" }, 0.5)
 
-    // 3) Branding iron — heat bloom, antler burns on hot, embers fly, then cools to dark.
-      .to(heatRef.current, { opacity: 0.78, duration: 0.45, ease: "power2.out" }, 0.95)
-      .to([antlerGlowRef.current, antlerRef.current], { strokeDashoffset: 0, duration: 1.05, ease: "power1.inOut" }, 1.0)
+    // 3) Branding iron — heat bloom rises, the MD mark burns into the leather, embers fly, then cools.
+      .to(heatRef.current, { opacity: 0.82, duration: 0.45, ease: "power2.out" }, 0.95)
+      .fromTo(markRef.current,
+        { opacity: 0, scale: 0.82, svgOrigin: "100 101" },
+        { opacity: 1, scale: 1, svgOrigin: "100 101", duration: 0.9, ease: "back.out(1.4)" }, 1.05)
       .fromTo(sparks,
         { opacity: 0.95, y: 5, scale: 1 },
         { opacity: 0, y: -24, scale: 0.35, stagger: 0.06, duration: 0.95, ease: "power1.out" }, 1.5)
       .to(heatRef.current, { opacity: 0, duration: 0.9, ease: "power2.out" }, 1.95)
-      .to(antlerGlowRef.current, { opacity: 0, duration: 0.95, ease: "power2.out" }, 2.05)
 
     // 4) Needle sews the rim — a glowing point leads the stitch reveal around.
       .set(needleRef.current, { opacity: 1 }, 2.0)
@@ -139,8 +135,8 @@ export default function Hero() {
       const mx = (e.clientX / window.innerWidth - 0.5) * 2;
       const my = (e.clientY / window.innerHeight - 0.5) * 2;
       gsap.to(tiltRef.current, {
-        rotateY: mx * 9, rotateX: -my * 6, x: mx * 10, y: my * 8,
-        duration: 0.9, ease: "power2.out",
+        rotateY: mx * 4, rotateX: -my * 2.5, x: mx * 4, y: my * 3,
+        duration: 1.1, ease: "power2.out",
       });
     };
     window.addEventListener("mousemove", onMouseMove);
@@ -366,14 +362,10 @@ export default function Hero() {
                 {/* Branding heat bloom — rises during the burn, then cools off */}
                 <circle ref={heatRef} cx="100" cy="101" r="34" fill="url(#heatGrad)" opacity="0" filter="url(#softGlow)" />
 
-                {/* Antler mark — hot glow draws on, dark burn follows, glow then cools */}
-                <g transform="translate(100 101) scale(2.15) translate(-24 -24)">
-                  <path ref={antlerGlowRef} d={ANTLER_D} fill="none" stroke="#FF8A24" strokeWidth="3.4"
-                    strokeLinecap="round" strokeLinejoin="round" filter="url(#softGlow)"
-                    pathLength={1} strokeDasharray={1} strokeDashoffset={1} />
-                  <path ref={antlerRef} d={ANTLER_D} fill="none" stroke="#241710" strokeWidth="2.7"
-                    strokeLinecap="round" strokeLinejoin="round"
-                    pathLength={1} strokeDasharray={1} strokeDashoffset={1} />
+                {/* MD maker's mark — the real illustrated monogram, branded into the leather */}
+                <g ref={markRef} opacity="0" style={{ mixBlendMode: "multiply" }}>
+                  <image href="/md-mark.png" x="54" y="66" width="92" height="69.85"
+                    preserveAspectRatio="xMidYMid meet" opacity="0.94" />
                 </g>
 
                 {/* Burn embers */}
