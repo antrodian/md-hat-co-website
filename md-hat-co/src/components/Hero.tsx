@@ -31,6 +31,7 @@ export default function Hero() {
   const heatRef = useRef<SVGCircleElement>(null);      // branding heat bloom
   const sheenRef = useRef<SVGRectElement>(null);       // specular sweep
   const sparksRef = useRef<SVGGElement>(null);         // burn embers
+  const runnerRef = useRef<SVGGElement>(null);         // perpetual needle running the seam
   const cta1Ref = useRef<HTMLAnchorElement>(null);
   const cta2Ref = useRef<HTMLAnchorElement>(null);
 
@@ -64,7 +65,7 @@ export default function Hero() {
                 specRef.current, productRef.current, ...lines], { opacity: 1, x: 0, y: 0, scale: 1 });
       // Finished patch: fully tooled + sewn, heat/motion FX off.
       gsap.set([antlerRef.current, antlerGlowRef.current, sewRef.current], { strokeDashoffset: 0 });
-      gsap.set([antlerGlowRef.current, needleRef.current, shockRef.current, heatRef.current, sheenRef.current], { opacity: 0 });
+      gsap.set([antlerGlowRef.current, needleRef.current, shockRef.current, heatRef.current, sheenRef.current, runnerRef.current], { opacity: 0 });
       return;
     }
 
@@ -115,8 +116,15 @@ export default function Hero() {
       .to(specRef.current, { opacity: 1, y: 0, duration: 0.6 }, 1.5);
 
     // ── Idle loops — keep the patch alive after the build ──
+    // Perpetual needle running the seam — the always-on "sewing" motion.
+    gsap.set(runnerRef.current, { opacity: 0 });
+    const runnerFade = gsap.to(runnerRef.current, { opacity: 1, duration: 0.7, delay: 3.3, ease: "power1.out" });
+    const runnerSpin = gsap.to(runnerRef.current, {
+      rotation: 360, svgOrigin: "100 100", duration: 5.5, ease: "none", repeat: -1, delay: 3.3,
+    });
+
     // Specular sheen sweeping across the domed leather.
-    const sheenTl = gsap.timeline({ repeat: -1, repeatDelay: 4.2, delay: 3.4 });
+    const sheenTl = gsap.timeline({ repeat: -1, repeatDelay: 2.8, delay: 3.4 });
     sheenTl.fromTo(sheenRef.current, { x: -120, opacity: 0 }, { opacity: 0.58, duration: 0.35, ease: "power1.in" }, 0)
       .to(sheenRef.current, { x: 150, duration: 1.5, ease: "sine.inOut" }, 0)
       .to(sheenRef.current, { opacity: 0, duration: 0.45, ease: "power1.out" }, 1.05);
@@ -144,6 +152,8 @@ export default function Hero() {
       tl.kill();
       sheenTl.kill();
       floatTw.kill();
+      runnerFade.kill();
+      runnerSpin.kill();
       c1?.();
       c2?.();
     };
@@ -376,10 +386,19 @@ export default function Hero() {
                   <circle cx="89" cy="100" r="1.1" fill="#FFD79E" />
                 </g>
 
-                {/* Glowing needle point leading the stitch around the rim */}
+                {/* Glowing needle point leading the stitch around the rim (build) */}
                 <g ref={needleRef} opacity="0">
                   <circle cx="100" cy="27" r="3.6" fill="#FFF4DE" filter="url(#softGlow)" />
                   <circle cx="100" cy="27" r="1.7" fill="#fff" />
+                </g>
+
+                {/* Perpetual seam runner — a glowing point + comet trail forever working the rim */}
+                <g ref={runnerRef} opacity="0">
+                  <circle cx="100" cy="100" r="73" fill="none" stroke="#FFE9C2" strokeWidth="2.6"
+                    strokeLinecap="round" pathLength={1} strokeDasharray="0.06 0.94"
+                    transform="rotate(-90 100 100)" opacity="0.55" filter="url(#softGlow)" />
+                  <circle cx="100" cy="27" r="3.1" fill="#FFF4DE" filter="url(#softGlow)" />
+                  <circle cx="100" cy="27" r="1.5" fill="#fff" />
                 </g>
 
                 {/* Stamp-press shockwave */}
