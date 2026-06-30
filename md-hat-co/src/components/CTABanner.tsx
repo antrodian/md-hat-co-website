@@ -85,8 +85,8 @@ export default function CTABanner() {
           className="text-[#F2EEE6]/70 text-base leading-[1.7] max-w-md mx-auto mb-11"
           style={{ fontFamily: "var(--font-montserrat)" }}
         >
-          Upload your logo or pick a ready-made design. Every leather patch is
-          stitched on by hand — one hat or a hundred, with bulk pricing built in.
+          Pick from the lineup or bring us your own mark. Every patch is cut,
+          tooled, and stitched by hand — built for the hunt.
         </motion.p>
 
         <motion.div

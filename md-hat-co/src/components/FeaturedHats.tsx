@@ -10,13 +10,13 @@ import StitchSeam from "@/components/StitchSeam";
 const SOLO = "/products/ChatGPT Image Jun 29, 2026 at 02_00_31 PM.png";
 const TRIO = "/products/ChatGPT Image Jun 29, 2026 at 02_00_35 PM.png";
 
-// Real MD Hat Co product lines, pulled from mdhatco.com. Photography drops
-// into each card as colorways are shot.
+// Demo lineup — the blaze duck-camo trucker is the live SKU; additional
+// colorways/photography drop in here as they're shot.
 const HATS = [
-  { id: 1, name: "Custom Leather Patch", patch: "Your Logo",  color: "Richardson 112", price: "$27.99", img: SOLO, tag: "Bestseller" },
-  { id: 2, name: "Camo Leather Patch",   patch: "Your Logo",  color: "Camo",           price: "$29.99", img: TRIO, tag: null },
-  { id: 3, name: "Custom Name Hats",     patch: "100+ Names", color: "Yupoong 6606",   price: "$27.99", img: SOLO, tag: "New" },
-  { id: 4, name: "Hats for the People",  patch: "Pre-Designed", color: "Ready to Ship", price: "$27.99", img: TRIO, tag: null },
+  { id: 1, name: "The Blaze 112", patch: "Antler", color: "Blaze Camo", price: "$42", img: SOLO, tag: "Bestseller" },
+  { id: 2, name: "Backcountry",   patch: "Antler", color: "Blaze Camo", price: "$42", img: TRIO, tag: null },
+  { id: 3, name: "Marsh King",    patch: "Antler", color: "Blaze Camo", price: "$44", img: SOLO, tag: "New" },
+  { id: 4, name: "Timberline",    patch: "Antler", color: "Blaze Camo", price: "$44", img: TRIO, tag: null },
 ];
 
 function HatCard({ hat, index, show }: { hat: (typeof HATS)[0]; index: number; show: boolean }) {
@@ -133,7 +133,7 @@ export default function FeaturedHats() {
               className="text-[#2E251B] text-4xl sm:text-5xl font-black tracking-[-0.02em]"
               style={{ fontFamily: "var(--font-roboto-slab)" }}
             >
-              What We Make
+              This Season&apos;s Lineup
             </motion.h2>
           </div>
           <motion.div

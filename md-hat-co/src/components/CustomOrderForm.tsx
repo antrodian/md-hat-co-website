@@ -10,7 +10,6 @@ type FormData = {
   hatStyle: string;
   hatColor: string;
   patchShape: string;
-  leatherColor: string;
   patchDescription: string;
   patchText: string;
   quantity: string;
@@ -19,17 +18,8 @@ type FormData = {
 
 const INITIAL: FormData = {
   name: "", email: "", phone: "", hatStyle: "", hatColor: "",
-  patchShape: "", leatherColor: "", patchDescription: "", patchText: "", quantity: "1", notes: "",
+  patchShape: "", patchDescription: "", patchText: "", quantity: "1", notes: "",
 };
-
-// Real bulk tiers from mdhatco.com — the more you order, the less per hat.
-const BULK_TIERS = [
-  { min: 10, price: "$25.19" },
-  { min: 20, price: "$23.79" },
-  { min: 35, price: "$22.39" },
-  { min: 50, price: "$20.99" },
-  { min: 100, price: "$18.19" },
-];
 
 const inputClass =
   "w-full bg-transparent border border-[#6B4F33]/30 text-[#F2EEE6] px-4 py-3 text-sm tracking-wide placeholder-[#C7B291]/40 focus:outline-none focus:border-[#6A6F43] transition-colors duration-200";
@@ -127,27 +117,20 @@ export default function CustomOrderForm() {
             <label className={labelClass} htmlFor="hatStyle">Hat Style *</label>
             <select id="hatStyle" required value={form.hatStyle} onChange={set("hatStyle")}
               className={selectClass} style={{ fontFamily: "var(--font-montserrat)" }}>
-              <option value="" disabled>Select a blank</option>
-              <option value="richardson-112">Richardson 112 (trucker, mesh back)</option>
-              <option value="yupoong-6606">Yupoong 6606 (trucker)</option>
+              <option value="" disabled>Select a style</option>
+              <option value="trucker">Trucker (mesh back)</option>
+              <option value="structured">Structured (baseball)</option>
+              <option value="unstructured">Unstructured (dad hat)</option>
+              <option value="snapback">Snapback</option>
               <option value="unsure">Not sure — recommend one</option>
             </select>
             <div className="pointer-events-none absolute right-4 top-[42px] text-[#6A6F43]">↓</div>
           </div>
-          <div className="relative">
-            <label className={labelClass} htmlFor="hatColor">Hat Color *</label>
-            <select id="hatColor" required value={form.hatColor} onChange={set("hatColor")}
-              className={selectClass} style={{ fontFamily: "var(--font-montserrat)" }}>
-              <option value="" disabled>Select a colorway</option>
-              <option value="grey-black">Grey / Black</option>
-              <option value="black-grey">Black / Grey</option>
-              <option value="grey-green">Grey / Green</option>
-              <option value="grey-orange">Grey / Orange</option>
-              <option value="loden-black">Loden / Black</option>
-              <option value="caramel-black">Caramel / Black</option>
-              <option value="camo">Camo</option>
-            </select>
-            <div className="pointer-events-none absolute right-4 top-[42px] text-[#6A6F43]">↓</div>
+          <div>
+            <label className={labelClass} htmlFor="hatColor">Hat Color / Camo *</label>
+            <input id="hatColor" type="text" required value={form.hatColor} onChange={set("hatColor")}
+              placeholder="Blaze camo, bottomland, olive, black..." className={inputClass}
+              style={{ fontFamily: "var(--font-montserrat)" }} />
           </div>
         </div>
       </fieldset>
@@ -159,52 +142,31 @@ export default function CustomOrderForm() {
         </legend>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
           <div className="relative">
-            <label className={labelClass} htmlFor="patchShape">Patch Shape *</label>
-            <select id="patchShape" required value={form.patchShape} onChange={set("patchShape")}
+            <label className={labelClass} htmlFor="patchShape">Patch Shape</label>
+            <select id="patchShape" value={form.patchShape} onChange={set("patchShape")}
               className={selectClass} style={{ fontFamily: "var(--font-montserrat)" }}>
-              <option value="" disabled>Select a shape</option>
-              <option value="rectangle">Rectangle</option>
-              <option value="square">Square</option>
-              <option value="hexagon">Hexagon</option>
+              <option value="">No preference</option>
               <option value="circle">Circle</option>
+              <option value="rectangle">Rectangle</option>
               <option value="oval">Oval</option>
-              <option value="contour">Contour</option>
+              <option value="shield">Shield</option>
+              <option value="custom">Custom shape</option>
             </select>
             <div className="pointer-events-none absolute right-4 top-[42px] text-[#6A6F43]">↓</div>
           </div>
-          <div className="relative">
-            <label className={labelClass} htmlFor="leatherColor">Leather Color *</label>
-            <select id="leatherColor" required value={form.leatherColor} onChange={set("leatherColor")}
-              className={selectClass} style={{ fontFamily: "var(--font-montserrat)" }}>
-              <option value="" disabled>Select a leather</option>
-              <option value="natural">Natural Tan</option>
-              <option value="caramel">Caramel</option>
-              <option value="dark-brown">Dark Brown</option>
-              <option value="black">Black</option>
-            </select>
-            <div className="pointer-events-none absolute right-4 top-[42px] text-[#6A6F43]">↓</div>
+          <div>
+            <label className={labelClass} htmlFor="patchText">
+              Text / Initials <span className="text-[#C7B291]/50 normal-case tracking-normal">— optional</span>
+            </label>
+            <input id="patchText" type="text" value={form.patchText} onChange={set("patchText")}
+              placeholder="Initials, ranch name, a date..." className={inputClass}
+              style={{ fontFamily: "var(--font-montserrat)" }} />
           </div>
-        </div>
-        <div className="mb-6">
-          <label className={labelClass} htmlFor="patchText">
-            Text / Name on Patch <span className="text-[#C7B291]/50 normal-case tracking-normal">— optional</span>
-          </label>
-          <input id="patchText" type="text" value={form.patchText} onChange={set("patchText")}
-            placeholder="A name, number, brand or date..." className={inputClass}
-            style={{ fontFamily: "var(--font-montserrat)" }} />
-        </div>
-        <div className="mb-6">
-          <label className={labelClass} htmlFor="logo">
-            Upload Your Logo <span className="text-[#C7B291]/50 normal-case tracking-normal">— optional</span>
-          </label>
-          <input id="logo" type="file" accept="image/*,.pdf,.ai,.eps,.svg"
-            className={`${inputClass} cursor-pointer file:mr-4 file:border-0 file:bg-[#3E4B34] file:text-[#F2EEE6] file:px-4 file:py-1.5 file:text-[10px] file:uppercase file:tracking-[0.16em] file:cursor-pointer`}
-            style={{ fontFamily: "var(--font-montserrat)" }} />
         </div>
         <div>
           <label className={labelClass} htmlFor="patchDescription">Describe Your Design *</label>
           <textarea id="patchDescription" required value={form.patchDescription} onChange={set("patchDescription")}
-            placeholder="Your logo, a brand mark, a name, a duck — describe it in as much or as little detail as you have."
+            placeholder="Antlers, a duck, a landscape, a brand mark, initials — describe it in as much or as little detail as you have."
             rows={5} className={`${inputClass} resize-none`} style={{ fontFamily: "var(--font-montserrat)" }} />
         </div>
       </fieldset>
@@ -217,38 +179,9 @@ export default function CustomOrderForm() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
           <div>
             <label className={labelClass} htmlFor="quantity">Quantity *</label>
-            <input id="quantity" type="number" required min={1}
+            <input id="quantity" type="number" required min={1} max={50}
               value={form.quantity} onChange={set("quantity")} className={inputClass}
               style={{ fontFamily: "var(--font-montserrat)" }} />
-          </div>
-        </div>
-
-        {/* Bulk pricing — the more you order, the less per hat */}
-        <div className="mb-6 border border-[#6B4F33]/25 p-5">
-          <p className="text-[#C7B291] text-[10px] tracking-[0.32em] uppercase mb-4"
-            style={{ fontFamily: "var(--font-montserrat)" }}>
-            Bulk Pricing — Per Hat
-          </p>
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-            {BULK_TIERS.map((tier) => {
-              const qty = parseInt(form.quantity, 10) || 0;
-              const active = qty >= tier.min;
-              return (
-                <div key={tier.min}
-                  className={`text-center py-3 border transition-colors duration-200 ${
-                    active ? "border-[#6A6F43] bg-[#6A6F43]/10" : "border-[#6B4F33]/20"
-                  }`}>
-                  <p className={`text-sm font-bold tabular-nums ${active ? "text-[#F2EEE6]" : "text-[#F2EEE6]/70"}`}
-                    style={{ fontFamily: "var(--font-roboto-slab)" }}>
-                    {tier.price}
-                  </p>
-                  <p className="text-[#C7B291]/70 text-[10px] tracking-[0.14em] uppercase mt-1"
-                    style={{ fontFamily: "var(--font-montserrat)" }}>
-                    {tier.min}+
-                  </p>
-                </div>
-              );
-            })}
           </div>
         </div>
         <div>

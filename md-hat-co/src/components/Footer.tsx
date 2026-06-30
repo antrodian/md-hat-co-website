@@ -52,16 +52,16 @@ export default function Footer() {
                 className="text-[#C7B291] text-[0.62rem] tracking-[0.35em] uppercase"
                 style={{ fontFamily: "var(--font-montserrat)" }}
               >
-                Awesome · Custom · Hats
+                Built for the Hunt
               </span>
             </div>
             <p
               className="text-[#F2EEE6]/55 text-sm leading-[1.8] mb-7"
               style={{ fontFamily: "var(--font-montserrat)" }}
             >
-              Custom leather patch hats, born from Motion Ducks. Upload your logo,
-              pick your hat, and we stitch on a real leather patch — from one hat
-              to a hundred, with bulk pricing for teams, brands, and events.
+              Premium blank hats finished with hand-crafted leather patches. Rooted
+              in hunting tradition and Southern craftsmanship — quality gear made to
+              age in the field, not on a shelf.
             </p>
             <Link
               href="/custom-order"
@@ -107,7 +107,7 @@ export default function Footer() {
             className="text-[#F2EEE6]/70 text-[0.62rem] sm:text-xs tracking-[0.22em] uppercase text-center"
             style={{ fontFamily: "var(--font-montserrat)" }}
           >
-            Custom Hats · Real Leather Patches · Your Logo
+            Custom Hats · Custom Patches · Built for the Hunt
           </p>
           <p
             className="text-[#F2EEE6]/40 text-[0.62rem] tracking-[0.22em] uppercase"

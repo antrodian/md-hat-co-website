@@ -12,29 +12,28 @@ const TRIO = "/products/ChatGPT Image Jun 29, 2026 at 02_00_35 PM.png";
 type Hat = {
   id: number;
   name: string;
-  category: "Leather Patch" | "Camo" | "Name Hats" | "Pre-Designed";
+  patch: "Antler" | "Duck" | "Custom";
   price: number;
-  blank: "Richardson 112" | "Yupoong 6606";
-  color: string;
+  style: "Trucker" | "Structured" | "Snapback";
   img: string;
   tag?: "Bestseller" | "New" | "Custom";
 };
 
-// Real MD Hat Co lines + colorways from mdhatco.com. Product photography
-// drops into each card as it's shot.
+// Demo catalog — the blaze duck-camo trucker is the live SKU; more patch
+// designs, cap styles, and photography drop into this list as they ship.
 const HATS: Hat[] = [
-  { id: 1, name: "Custom Leather Patch", category: "Leather Patch", price: 27.99, blank: "Richardson 112", color: "Grey / Black",   img: SOLO, tag: "Bestseller" },
-  { id: 2, name: "Custom Leather Patch", category: "Leather Patch", price: 27.99, blank: "Richardson 112", color: "Loden / Black",  img: TRIO },
-  { id: 3, name: "Camo Leather Patch",   category: "Camo",          price: 29.99, blank: "Richardson 112", color: "Camo / Black",   img: SOLO, tag: "New" },
-  { id: 4, name: "Custom Name Hat",      category: "Name Hats",     price: 27.99, blank: "Yupoong 6606",   color: "Black / Grey",   img: TRIO, tag: "Custom" },
-  { id: 5, name: "Custom Leather Patch", category: "Leather Patch", price: 27.99, blank: "Yupoong 6606",   color: "Caramel / Black", img: SOLO },
-  { id: 6, name: "Soccer Name Hat",      category: "Name Hats",     price: 27.99, blank: "Yupoong 6606",   color: "Grey / Green",   img: TRIO },
-  { id: 7, name: "Camo Leather Patch",   category: "Camo",          price: 29.99, blank: "Richardson 112", color: "Grey / Orange",  img: SOLO, tag: "New" },
-  { id: 8, name: "Hats for the People",  category: "Pre-Designed",  price: 27.99, blank: "Richardson 112", color: "Ready to Ship",  img: TRIO },
+  { id: 1, name: "The Blaze 112", patch: "Antler", price: 42, style: "Trucker",    img: SOLO, tag: "Bestseller" },
+  { id: 2, name: "Backcountry",   patch: "Antler", price: 42, style: "Trucker",    img: TRIO },
+  { id: 3, name: "Marsh King",    patch: "Duck",   price: 44, style: "Trucker",    img: SOLO, tag: "New" },
+  { id: 4, name: "The Drifter",   patch: "Custom", price: 48, style: "Snapback",   img: TRIO, tag: "Custom" },
+  { id: 5, name: "Timberline",    patch: "Antler", price: 44, style: "Structured", img: SOLO },
+  { id: 6, name: "Flyway",        patch: "Duck",   price: 44, style: "Trucker",    img: TRIO },
+  { id: 7, name: "High Ridge",    patch: "Antler", price: 46, style: "Structured", img: SOLO, tag: "New" },
+  { id: 8, name: "Homestead",     patch: "Custom", price: 48, style: "Snapback",   img: TRIO, tag: "Custom" },
 ];
 
-const CATEGORIES = ["All", "Leather Patch", "Camo", "Name Hats", "Pre-Designed"] as const;
-const BLANKS = ["All", "Richardson 112", "Yupoong 6606"] as const;
+const PATCHES = ["All", "Antler", "Duck", "Custom"] as const;
+const STYLES = ["All", "Trucker", "Structured", "Snapback"] as const;
 const SORTS = ["Featured", "Price: Low to High", "Price: High to Low"] as const;
 
 function HatCard({ hat }: { hat: Hat }) {
@@ -55,7 +54,7 @@ function HatCard({ hat }: { hat: Hat }) {
         <div className="relative overflow-hidden bg-gradient-to-b from-white to-[#EDE6D8] aspect-[4/5] mb-4 border border-[#6B4F33]/12 group-hover:border-[#6A6F43]/55 transition-[border-color,box-shadow,transform] duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_24px_48px_-20px_rgba(46,37,27,0.45)] group-focus-visible:ring-2 group-focus-visible:ring-[#6A6F43]">
           <Image
             src={hat.img}
-            alt={`${hat.name} — ${hat.color} ${hat.blank} with real leather patch`}
+            alt={`${hat.name} — blaze camo ${hat.style.toLowerCase()} with leather ${hat.patch.toLowerCase()} patch`}
             fill
             sizes="(max-width: 640px) 50vw, 33vw"
             className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
@@ -89,17 +88,17 @@ function HatCard({ hat }: { hat: Hat }) {
               {hat.name}
             </h3>
             <span
-              className="text-[#3E4B34] font-bold text-sm shrink-0 tabular-nums"
+              className="text-[#3E4B34] font-bold text-sm shrink-0"
               style={{ fontFamily: "var(--font-montserrat)" }}
             >
-              ${hat.price.toFixed(2)}
+              ${hat.price}
             </span>
           </div>
           <p
             className="text-[#2E251B]/55 text-[0.7rem] tracking-[0.12em] uppercase"
             style={{ fontFamily: "var(--font-montserrat)" }}
           >
-            {hat.color} · {hat.blank}
+            {hat.patch} Patch · {hat.style}
           </p>
         </div>
       </Link>
@@ -144,8 +143,8 @@ function FilterRow({
 }
 
 export default function ShopGrid() {
-  const [category, setCategory] = useState<string>("All");
-  const [blank, setBlank] = useState<string>("All");
+  const [patch, setPatch] = useState<string>("All");
+  const [style, setStyle] = useState<string>("All");
   const [sort, setSort] = useState<string>("Featured");
 
   const headRef = useRef(null);
@@ -153,14 +152,14 @@ export default function ShopGrid() {
 
   const filtered = useMemo(() => {
     let list = HATS.filter(
-      (h) => (category === "All" || h.category === category) && (blank === "All" || h.blank === blank),
+      (h) => (patch === "All" || h.patch === patch) && (style === "All" || h.style === style),
     );
     if (sort === "Price: Low to High") list = [...list].sort((a, b) => a.price - b.price);
     if (sort === "Price: High to Low") list = [...list].sort((a, b) => b.price - a.price);
     return list;
-  }, [category, blank, sort]);
+  }, [patch, style, sort]);
 
-  const clearFilters = () => { setCategory("All"); setBlank("All"); setSort("Featured"); };
+  const clearFilters = () => { setPatch("All"); setStyle("All"); setSort("Featured"); };
 
   return (
     <>
@@ -205,9 +204,8 @@ export default function ShopGrid() {
             className="text-[#F2EEE6]/60 text-sm leading-[1.8] mt-5 max-w-md"
             style={{ fontFamily: "var(--font-montserrat)" }}
           >
-            Every hat starts as a quality blank and gets a real leather patch
-            stitched on by hand. Pick a colorway, or upload your logo and build
-            your own — bulk discounts on every order of 10 or more.
+            Every piece starts as a quality blank and earns its leather patch by
+            hand. Pick a patch, pick a profile — or bring us your own design.
           </motion.p>
         </div>
       </section>
@@ -216,8 +214,8 @@ export default function ShopGrid() {
       <section className="px-6 py-14">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col gap-5 pb-8 mb-10 border-b border-[#6B4F33]/15">
-            <FilterRow label="Type" options={CATEGORIES} active={category} onSelect={setCategory} />
-            <FilterRow label="Blank" options={BLANKS} active={blank} onSelect={setBlank} />
+            <FilterRow label="Patch" options={PATCHES} active={patch} onSelect={setPatch} />
+            <FilterRow label="Style" options={STYLES} active={style} onSelect={setStyle} />
 
             <div className="flex items-center justify-between flex-wrap gap-4 pt-1">
               <motion.span

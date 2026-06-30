@@ -6,19 +6,19 @@ import { Compass, Patch, Duck } from "@/components/Icons";
 
 const FEATURES = [
   {
-    Icon: Patch,
-    title: "Your Logo, Real Leather",
-    body: "Upload your logo and we stitch it onto a genuine leather patch — six shapes, your choice of leather color, on a quality Richardson or Yupoong blank.",
+    Icon: Compass,
+    title: "Premium Quality",
+    body: "Top brands and durable materials. Every hat is built on a blank chosen to hold up in the field.",
   },
   {
-    Icon: Compass,
-    title: "Bulk Pricing",
-    body: "Order 10 and save, order 100 and save more. The more hats you buy, the lower the price — built for teams, brands, and events.",
+    Icon: Patch,
+    title: "Custom Patches",
+    body: "Your design, our craftsmanship. Each leather patch is hand-tooled and stitched on by hand.",
   },
   {
     Icon: Duck,
-    title: "Born from Motion Ducks",
-    body: "We started making custom hats for our own waterfowl brand. They were too good to keep to ourselves — so now we make them for everyone.",
+    title: "Made for Hunters",
+    body: "Rooted in hunting tradition and Southern heritage. Built for the hunt — and made to last.",
   },
 ];
 

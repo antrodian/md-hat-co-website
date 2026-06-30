@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Shop — MD Hat Company",
   description:
-    "Browse every MD Hat Company hat. Quality Richardson and Yupoong blanks finished with real leather patches. Custom logos welcome, bulk pricing on 10+.",
+    "Browse every MD Hat Company hat. Premium blank caps finished with hand-tooled leather patches. Built for the hunt.",
 };
 
 export default function ShopPage() {
