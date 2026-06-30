@@ -7,7 +7,7 @@ import { motion, useInView } from "framer-motion";
 import StitchSeam from "@/components/StitchSeam";
 import { ArrowRight } from "@/components/Icons";
 
-const STORY_IMG = "/products/ChatGPT Image Jun 29, 2026 at 02_00_35 PM.png";
+const STORY_IMG = "/antler-logo.jpg";
 
 export default function AboutTeaser() {
   const ref = useRef(null);
@@ -27,15 +27,14 @@ export default function AboutTeaser() {
             transition={{ duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="lg:col-span-2 order-2 lg:order-1"
           >
-            <div className="relative aspect-[4/5] bg-gradient-to-b from-white to-[#EDE6D8] overflow-hidden">
+            <div className="relative aspect-[4/5] bg-[#F0E8DC] overflow-hidden flex items-center justify-center">
               <Image
                 src={STORY_IMG}
-                alt="A stack of MD Hat Company blaze camo truckers with hand-tooled leather antler patches"
+                alt="MD Hat Company antler monogram — hand-drawn MD letterforms with hunting scene"
                 fill
                 sizes="(max-width: 1024px) 100vw, 40vw"
-                className="object-cover"
+                className="object-contain p-6"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#2E251B]/20 via-transparent to-transparent" />
               <div className="absolute top-0 left-0 w-10 h-10 border-t-2 border-l-2 border-[#6A6F43]/55" />
               <div className="absolute top-0 right-0 w-10 h-10 border-t-2 border-r-2 border-[#6A6F43]/55" />
               <div className="absolute bottom-0 left-0 w-10 h-10 border-b-2 border-l-2 border-[#6A6F43]/55" />
