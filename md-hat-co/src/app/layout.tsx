@@ -18,9 +18,9 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "MD Hat Company | Custom Hats. Built for the Hunt.",
+  title: "MD Hat Company | Awesome · Custom · Hats",
   description:
-    "Premium blank hats finished with hand-crafted custom leather patches. Rooted in hunting tradition and Southern craftsmanship. Built for the outdoors. Est. 2023.",
+    "Custom leather patch hats born from Motion Ducks. Upload your logo onto a real leather patch and a quality Richardson or Yupoong blank. One hat or a hundred — bulk pricing for teams, brands, and events.",
 };
 
 export default function RootLayout({

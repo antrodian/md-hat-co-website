@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Custom Patches | MD Hat Company",
   description:
-    "Design your own leather patch hat. Describe your patch, pick your cap, and we'll hand-tool and stitch it. Built for the hunt.",
+    "Design your own leather patch hat. Pick a Richardson or Yupoong blank, choose your patch shape and leather, upload your logo, and order one or a hundred with bulk pricing.",
 };
 
 export default function CustomOrderPage() {
@@ -40,8 +40,9 @@ export default function CustomOrderPage() {
               className="text-[#F2EEE6]/60 text-sm leading-[1.8] max-w-lg"
               style={{ fontFamily: "var(--font-montserrat)" }}
             >
-              Tell us what you want. Every leather patch is cut and tooled by hand —
-              so bring a detailed idea or a rough sketch. Either one works.
+              Pick your blank, your colorway, your patch shape and leather, then
+              upload your logo. Order one or a hundred — bulk pricing kicks in at
+              10 hats and keeps climbing from there.
             </p>
           </div>
         </div>

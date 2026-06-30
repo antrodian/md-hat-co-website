@@ -14,11 +14,20 @@ Andrew is a perfectionist builder. Work shipped from this workspace must meet a 
 
 ## Who
 
-**MD Hat Co.** — Premium leather patch hats built for the outdoors.
+**MD Hat Co.** (mdhatco.com) — Custom leather patch hats. "Awesome · Custom · Hats."
 
-- Buys blank hats and applies custom hand-crafted leather patches
-- Western/outdoors aesthetic — rugged but refined
-- Target: people who want quality, distinctive headwear for trail and town
+- **MD = Motion Ducks** — a waterfowl brand the client owns. MD Hat Co spun out
+  to make custom hats for Motion Ducks, then opened to other waterfowl companies,
+  businesses, teams, and the public. Bulk/B2B is core, not just DTC.
+- Buys blank hats (Richardson 112, Yupoong 6606) and stitches on real leather
+  patches with the customer's uploaded logo
+- Aesthetic: waterfowl/camo/outdoors, rugged but refined (NOT western/cowboy)
+- Flow: Pick blank → color → patch shape → leather color → upload logo → quantity
+- Patch shapes: Rectangle, Square, Hexagon, Circle, Oval, Contour
+- Colorways: Grey/Black, Black/Grey, Grey/Green, Grey/Orange, Loden/Black, Caramel/Black
+- Real prices: Custom Leather Patch $27.99, Camo $29.99, Name Hats $27.99
+- Bulk tiers (per hat): 10+ $25.19 · 20+ $23.79 · 35+ $22.39 · 50+ $20.99 · 100+ $18.19
+- Contact: email only (no public phone/address). Est. 2023.
 - Client: Andrew's sister (paid work)
 
 ---

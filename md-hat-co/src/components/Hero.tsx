@@ -197,7 +197,7 @@ export default function Hero() {
               className="text-[#C7B291] text-[0.66rem] sm:text-xs tracking-[0.34em] uppercase"
               style={{ fontFamily: "var(--font-montserrat)" }}
             >
-              Est. 2023 — Southern Craftsmanship
+              MD Hat Co — Born from Motion Ducks
             </span>
           </div>
 
@@ -206,25 +206,26 @@ export default function Hero() {
             <h1 ref={line1Ref}
               className="text-[#F2EEE6] text-[3.4rem] sm:text-7xl lg:text-[5.6rem] xl:text-[6.4rem] font-black leading-[0.95] tracking-[-0.03em] pb-[0.04em]"
               style={{ fontFamily: "var(--font-roboto-slab)" }}>
-              CUSTOM HATS.
+              YOUR LOGO.
             </h1>
             <h1 ref={line2Ref}
               className="text-[#F2EEE6] text-[3.4rem] sm:text-7xl lg:text-[5.6rem] xl:text-[6.4rem] font-black leading-[0.95] tracking-[-0.03em] pb-[0.04em]"
               style={{ fontFamily: "var(--font-roboto-slab)" }}>
-              BUILT FOR
+              REAL LEATHER.
             </h1>
             <h1 ref={line3Ref}
               className="text-[#C7B291] text-[3.4rem] sm:text-7xl lg:text-[5.6rem] xl:text-[6.4rem] font-black leading-[0.95] tracking-[-0.03em] pb-[0.08em] [text-shadow:0_2px_16px_rgba(0,0,0,0.45)]"
               style={{ fontFamily: "var(--font-roboto-slab)" }}>
-              THE HUNT.
+              AWESOME HATS.
             </h1>
           </div>
 
           <p ref={subRef}
             className="mt-7 text-[#F2EEE6]/65 text-base sm:text-lg leading-[1.7] max-w-md mx-auto lg:mx-0"
             style={{ fontFamily: "var(--font-montserrat)" }}>
-            Premium blank hats. Custom leather patches. Made for the outdoors and
-            the lifestyle of those who live for the hunt.
+            Upload your logo, pick your hat, and we stitch on a real leather
+            patch. From one hat to a hundred — for waterfowl brands, businesses,
+            teams, and anyone who wants the real thing.
           </p>
 
           <div ref={ctaRef} className="mt-9 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -248,9 +249,9 @@ export default function Hero() {
             style={{ fontFamily: "var(--font-montserrat)" }}>
             <span>Richardson 112</span>
             <span className="w-1 h-1 rotate-45 bg-[#6B4F33]" />
-            <span>Full-grain patch</span>
+            <span>Yupoong 6606</span>
             <span className="w-1 h-1 rotate-45 bg-[#6B4F33]" />
-            <span>Hand-stitched</span>
+            <span>Bulk discounts</span>
           </div>
         </div>
 
@@ -272,7 +273,7 @@ export default function Hero() {
                 </defs>
                 <text fill="#C7B291" style={{ fontFamily: "var(--font-montserrat)", fontSize: "9.5px", letterSpacing: "5px", fontWeight: 600 }}>
                   <textPath href="#stampcircle" startOffset="0%">
-                    CUSTOM LEATHER PATCHES • BUILT FOR THE HUNT •&nbsp;
+                    CUSTOM LEATHER PATCHES • AWESOME · CUSTOM · HATS •&nbsp;
                   </textPath>
                 </text>
               </svg>
@@ -409,7 +410,7 @@ export default function Hero() {
               <Antlers className="w-5 h-5 text-[#6A6F43]" />
               <span className="text-[#F2EEE6] text-[0.6rem] tracking-[0.18em] uppercase font-semibold"
                 style={{ fontFamily: "var(--font-montserrat)" }}>
-                Hand-tooled leather
+                Real leather patch
               </span>
             </div>
           </div>

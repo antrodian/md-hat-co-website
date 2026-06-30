@@ -13,7 +13,7 @@ export default function AboutTeaser() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
-  const quoteWords = "She couldn't find a hat worth wearing. So she made one.".split(" ");
+  const quoteWords = "We built hats for our own brand. Then everyone wanted one.".split(" ");
 
   return (
     <section id="story" className="relative py-24 px-6 bg-[#F2EEE6]">
@@ -79,10 +79,10 @@ export default function AboutTeaser() {
               className="text-[#2E251B]/60 text-sm leading-[1.8] mb-8 max-w-md"
               style={{ fontFamily: "var(--font-montserrat)" }}
             >
-              MD Hat Company started with a simple frustration: every hat on the
-              shelf looked the same. So Morgan began tooling her own leather
-              patches, pressing her own marks, and stitching them onto quality
-              blanks built for the outdoors. One hat became ten. Ten became a brand.
+              The MD in MD Hat Co stands for Motion Ducks — our waterfowl brand.
+              We needed custom hats of our own, so we started stitching real
+              leather patches onto quality blanks. They came out so well that
+              other companies wanted them too. So we opened the doors.
             </motion.p>
 
             <motion.p
@@ -92,8 +92,9 @@ export default function AboutTeaser() {
               className="text-[#2E251B]/60 text-sm leading-[1.8] mb-10 max-w-md"
               style={{ fontFamily: "var(--font-montserrat)" }}
             >
-              Every hat leaves the shop carrying something you can&apos;t buy off a
-              rack — the evidence of real hands, and a heritage built for the hunt.
+              Today we make custom leather patch hats for waterfowl companies,
+              businesses, teams, and anyone who wants their logo on something
+              worth wearing — one hat or a thousand.
             </motion.p>
 
             <motion.div

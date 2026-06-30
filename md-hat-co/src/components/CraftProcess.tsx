@@ -8,27 +8,27 @@ import { Stitch } from "@/components/Icons";
 const STEPS = [
   {
     num: "01",
-    label: "Source",
-    headline: "The Right Blank",
-    body: "Every hat starts with a trusted blank — Richardson 112 truckers chosen for fit, structure, and time spent in the field.",
+    label: "Pick Your Hat",
+    headline: "Style & Color",
+    body: "Choose a Richardson 112 or Yupoong 6606 blank, then your colorway — Grey/Black, Loden/Black, Caramel/Black and more.",
   },
   {
     num: "02",
-    label: "Design",
-    headline: "The Patch",
-    body: "Each leather patch is sketched and refined before a blade touches hide. The mark has to earn its place on the hat.",
+    label: "Design Your Patch",
+    headline: "Shape & Logo",
+    body: "Pick a patch shape — rectangle, square, hexagon, circle, oval or contour — choose your leather color, and upload your logo.",
   },
   {
     num: "03",
-    label: "Craft",
-    headline: "Cut & Tool",
-    body: "Full-grain leather, cut and tooled by hand. The antler mark is burned and pressed with intention — every line on purpose.",
+    label: "Choose Quantity",
+    headline: "Buy in Bulk",
+    body: "Order one or order a hundred. Discounts kick in at 10 hats and keep climbing — the more you buy, the less you pay.",
   },
   {
     num: "04",
-    label: "Finish",
-    headline: "Stitched On",
-    body: "Patch meets hat with a stitch that won't quit. Tight, clean, permanent. Built for the hunt and made to last.",
+    label: "We Make It",
+    headline: "Stitched & Shipped",
+    body: "We stitch your real leather patch onto every hat by hand, then ship the order to you. Clean, permanent, made to last.",
   },
 ];
 
@@ -116,7 +116,7 @@ export default function CraftProcess() {
               className="text-[#F2EEE6] text-4xl sm:text-5xl font-black max-w-xl tracking-[-0.02em] leading-[1.05]"
               style={{ fontFamily: "var(--font-roboto-slab)" }}
             >
-              How Every Hat Gets Made
+From Your Logo to a Finished Hat
             </motion.h2>
           </div>
         </div>
