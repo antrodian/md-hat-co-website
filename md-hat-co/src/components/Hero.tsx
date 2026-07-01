@@ -17,15 +17,17 @@ export default function Hero() {
   const specRef = useRef<HTMLDivElement>(null);
   const productRef = useRef<HTMLDivElement>(null);
   const tiltRef = useRef<HTMLDivElement>(null);
-  const floatRef = useRef<HTMLDivElement>(null);
-  const markRef = useRef<SVGGElement>(null);           // MD maker's mark, branded in
-  const sewRef = useRef<SVGCircleElement>(null);       // stitch reveal mask
-  const needleRef = useRef<SVGGElement>(null);         // glowing needle point on the rim
-  const shockRef = useRef<SVGCircleElement>(null);     // stamp-press shockwave
-  const heatRef = useRef<SVGCircleElement>(null);      // branding heat bloom
-  const scorchRef = useRef<SVGCircleElement>(null);    // permanent char left by the iron
-  const sheenRef = useRef<SVGRectElement>(null);       // specular sweep
-  const sparksRef = useRef<SVGGElement>(null);         // burn embers
+  const floatRef = useRef<HTMLDivElement>(null);       // assembled hat, idle float
+  const gridRef = useRef<SVGGElement>(null);           // blueprint guide lines
+  const bracketRef = useRef<SVGGElement>(null);        // HUD corner frame
+  const crownRef = useRef<SVGGElement>(null);          // 6-panel crown, exploded piece
+  const brimRef = useRef<SVGPathElement>(null);        // curved brim, exploded piece
+  const patchRef = useRef<SVGGElement>(null);          // front patch, exploded piece
+  const stitchRef = useRef<SVGCircleElement>(null);    // stitch reveal mask
+  const monogramRef = useRef<SVGGElement>(null);       // MD mark on the patch
+  const jointsRef = useRef<SVGGElement>(null);         // assembly-point flash rings
+  const calloutRef = useRef<SVGGElement>(null);        // spec leader lines + labels
+  const scanRef = useRef<SVGLineElement>(null);        // idle blueprint scan sweep
   const cta1Ref = useRef<HTMLAnchorElement>(null);
   const cta2Ref = useRef<HTMLAnchorElement>(null);
 
@@ -57,11 +59,12 @@ export default function Hero() {
     if (reduce) {
       gsap.set([eyebrowRef.current, headlineRef.current, subRef.current, ctaRef.current,
                 specRef.current, productRef.current, ...lines], { opacity: 1, x: 0, y: 0, scale: 1 });
-      // Finished patch: fully tooled + sewn, heat/motion FX off.
-      gsap.set(sewRef.current, { strokeDashoffset: 0 });
-      gsap.set(markRef.current, { opacity: 1 });
-      gsap.set(scorchRef.current, { opacity: 0.14 });
-      gsap.set([needleRef.current, shockRef.current, heatRef.current, sheenRef.current], { opacity: 0 });
+      // Fully assembled hat, blueprint chrome settled, motion FX off.
+      gsap.set([crownRef.current, brimRef.current, patchRef.current], { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1 });
+      gsap.set(stitchRef.current, { strokeDashoffset: 0 });
+      gsap.set(monogramRef.current, { opacity: 1 });
+      gsap.set([gridRef.current, bracketRef.current, calloutRef.current], { opacity: 1 });
+      gsap.set([jointsRef.current, scanRef.current], { opacity: 0 });
       return;
     }
 
@@ -72,57 +75,63 @@ export default function Hero() {
     gsap.set(ctaRef.current, { opacity: 0, y: 16 });
     gsap.set(specRef.current, { opacity: 0, y: 12 });
     gsap.set(productRef.current, { opacity: 0, scale: 1.16, y: -26 });
-    gsap.set(sewRef.current, { strokeDashoffset: 1 });
-    gsap.set(markRef.current, { opacity: 0 });
-    gsap.set([needleRef.current, shockRef.current, heatRef.current, scorchRef.current, sheenRef.current], { opacity: 0 });
+    gsap.set(gridRef.current, { opacity: 0 });
+    gsap.set(bracketRef.current, { opacity: 0, scale: 0.85, transformOrigin: "50% 50%" });
+    gsap.set(crownRef.current, { opacity: 0, x: -8, y: -46, rotation: -8, transformOrigin: "50% 100%" });
+    gsap.set(brimRef.current, { opacity: 0, x: 30, y: 38, rotation: 9, transformOrigin: "50% 0%" });
+    gsap.set(patchRef.current, { opacity: 0, x: 58, y: -16, scale: 1.5, rotation: 14, transformOrigin: "50% 50%" });
+    gsap.set(stitchRef.current, { strokeDashoffset: 1 });
+    gsap.set(monogramRef.current, { opacity: 0 });
+    gsap.set(jointsRef.current, { opacity: 0 });
+    gsap.set(calloutRef.current, { opacity: 0 });
 
-    const sparks = sparksRef.current ? Array.from(sparksRef.current.children) : [];
-    gsap.set(sparks, { opacity: 0 });
+    const leaders = calloutRef.current ? Array.from(calloutRef.current.querySelectorAll("[data-leader]")) : [];
+    gsap.set(leaders, { strokeDashoffset: 1 });
+    const labels = calloutRef.current ? Array.from(calloutRef.current.querySelectorAll("[data-label]")) : [];
+    gsap.set(labels, { opacity: 0, x: -4 });
+
+    const joints = jointsRef.current ? Array.from(jointsRef.current.children) : [];
+    gsap.set(joints, { opacity: 0, scale: 0.4, transformOrigin: "50% 50%" });
 
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-    // 1) Stamp-press — the die descends onto the leather: big and soft, then seated.
-    //    A quick squash on contact + a thin shockwave sell the weight without cartoon bounce.
+    // 1) Blueprint establishes — guide grid and HUD corner frame settle in first.
     tl.to(productRef.current, { opacity: 1, scale: 1, y: 0, duration: 0.85, ease: "power4.out" }, 0.1)
-      .to(floatRef.current, { scale: 0.972, duration: 0.09, ease: "power2.in", transformOrigin: "50% 62%" }, 0.78)
-      .to(floatRef.current, { scale: 1, duration: 0.55, ease: "elastic.out(1.2, 0.5)" }, 0.87)
-      .fromTo(shockRef.current,
-        { attr: { r: 78 }, opacity: 0.45, strokeWidth: 2 },
-        { attr: { r: 103 }, opacity: 0, strokeWidth: 0.3, duration: 0.7, ease: "power2.out" }, 0.8)
+      .to(gridRef.current, { opacity: 1, duration: 0.5, ease: "power1.out" }, 0.15)
+      .to(bracketRef.current, { opacity: 1, scale: 1, duration: 0.55, ease: "power3.out" }, 0.25)
 
     // 2) Copy rises in.
       .to(eyebrowRef.current, { opacity: 1, x: 0, duration: 0.6 }, 0.4)
       .to(lines, { opacity: 1, y: 0, duration: 0.85, stagger: 0.12, ease: "power3.out" }, 0.5)
 
-    // 3) Branding iron — heat blooms, the MD mark presses IN (scales down into the hide),
-    //    a faint char stays behind, embers lift, heat cools slowly.
-      .to(heatRef.current, { opacity: 0.75, duration: 0.4, ease: "power2.out" }, 1.05)
-      .fromTo(markRef.current,
-        { opacity: 0, scale: 1.16, svgOrigin: "100 101" },
-        { opacity: 1, scale: 1, svgOrigin: "100 101", duration: 0.85, ease: "power3.out" }, 1.15)
-      .to(scorchRef.current, { opacity: 0.14, duration: 0.7, ease: "power1.out" }, 1.25)
-      .fromTo(sparks,
-        { opacity: 0.85, y: 4, scale: 1 },
-        { opacity: 0, y: -20, scale: 0.4, stagger: 0.07, duration: 1.1, ease: "power1.out" }, 1.55)
-      .to(heatRef.current, { opacity: 0, duration: 1.2, ease: "power2.inOut" }, 1.9)
+    // 3) Assembly — crown, brim and patch fly in from their exploded positions and seat home,
+    //    each landing punctuated by a small crosshair flash at the join.
+      .to(crownRef.current, { opacity: 1, x: 0, y: 0, rotation: 0, duration: 0.75, ease: "power4.out" }, 0.55)
+      .to(brimRef.current, { opacity: 1, x: 0, y: 0, rotation: 0, duration: 0.75, ease: "power4.out" }, 0.72)
+      .to(patchRef.current, { opacity: 1, x: 0, y: 0, scale: 1, rotation: 0, duration: 0.7, ease: "power4.out" }, 0.9)
+      .to(joints, { opacity: 1, scale: 1, duration: 0.22, stagger: 0.12, ease: "power2.out" }, 1.05)
+      .to(joints, { opacity: 0, duration: 0.5, stagger: 0.12, ease: "power1.out" }, 1.4)
 
-    // 4) Needle sews the rim — one unhurried pass, glowing point leading the thread.
-      .to(needleRef.current, { opacity: 1, duration: 0.25, ease: "power1.in" }, 2.05)
-      .to(sewRef.current, { strokeDashoffset: 0, duration: 1.45, ease: "power1.inOut" }, 2.1)
-      .to(needleRef.current, { rotation: 360, svgOrigin: "100 100", duration: 1.45, ease: "power1.inOut" }, 2.1)
-      .to(needleRef.current, { opacity: 0, duration: 0.45, ease: "power1.out" }, 3.4)
+    // 4) Stitch draws around the patch rim, monogram settles in behind it.
+      .to(stitchRef.current, { strokeDashoffset: 0, duration: 1.1, ease: "power1.inOut" }, 1.5)
+      .to(monogramRef.current, { opacity: 1, duration: 0.6, ease: "power2.out" }, 1.9)
 
-    // 5) Remaining copy.
+    // 5) Spec callouts draw their leader lines and fade their labels in.
+      .to(calloutRef.current, { opacity: 1, duration: 0.3 }, 2.15)
+      .to(leaders, { strokeDashoffset: 0, duration: 0.7, stagger: 0.15, ease: "power1.inOut" }, 2.15)
+      .to(labels, { opacity: 1, x: 0, duration: 0.5, stagger: 0.15, ease: "power2.out" }, 2.35)
+
+    // 6) Remaining copy.
       .to(subRef.current, { opacity: 1, y: 0, duration: 0.7 }, 1.1)
       .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.6 }, 1.3)
       .to(specRef.current, { opacity: 1, y: 0, duration: 0.6 }, 1.5);
 
     // ── Idle — quiet, occasional life. The build is the show; rest is rest. ──
-    // Specular sheen sweeping across the domed leather, rare enough to stay special.
+    // Blueprint scan sweeping down the frame, rare enough to stay special.
     const sheenTl = gsap.timeline({ repeat: -1, repeatDelay: 5.5, delay: 4.2 });
-    sheenTl.fromTo(sheenRef.current, { x: -120, opacity: 0 }, { opacity: 0.42, duration: 0.4, ease: "power1.in" }, 0)
-      .to(sheenRef.current, { x: 150, duration: 1.8, ease: "sine.inOut" }, 0)
-      .to(sheenRef.current, { opacity: 0, duration: 0.55, ease: "power1.out" }, 1.25);
+    sheenTl.fromTo(scanRef.current, { y: 8, opacity: 0 }, { opacity: 0.5, duration: 0.4, ease: "power1.in" }, 0)
+      .to(scanRef.current, { y: 192, duration: 1.9, ease: "sine.inOut" }, 0)
+      .to(scanRef.current, { opacity: 0, duration: 0.55, ease: "power1.out" }, 1.35);
 
     // Gentle 3D float so it breathes at rest.
     const floatTw = gsap.to(floatRef.current, {
@@ -256,153 +265,132 @@ export default function Hero() {
           style={{ perspective: "1100px" }}>
           <div ref={tiltRef} className="relative w-[min(86vw,460px)] aspect-square"
             style={{ transformStyle: "preserve-3d" }}>
-            {/* Warm spotlight glow — blaze accent, slow breathing pulse */}
+            {/* Ambient glow — brand-warm, slow breathing pulse */}
             <div aria-hidden className="absolute inset-0 pointer-events-none motion-safe:[animation:glowPulse_6s_ease-in-out_infinite]"
-              style={{ background: "radial-gradient(circle at 50% 47%, rgba(212,108,40,0.42) 0%, rgba(106,111,67,0.16) 34%, transparent 62%)", filter: "blur(10px)" }} />
+              style={{ background: "radial-gradient(circle at 50% 47%, rgba(106,111,67,0.30) 0%, rgba(199,178,145,0.13) 34%, transparent 62%)", filter: "blur(10px)" }} />
 
-            {/* Rotating stamp ring — circular brand text */}
-            <div aria-hidden className="absolute inset-[2%] motion-safe:animate-[spin_38s_linear_infinite] opacity-60"
-              style={{ animationName: "spin" }}>
-              <svg viewBox="0 0 200 200" className="w-full h-full">
-                <defs>
-                  <path id="stampcircle" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0" />
-                </defs>
-                <text fill="#C7B291" style={{ fontFamily: "var(--font-montserrat)", fontSize: "9.5px", letterSpacing: "5px", fontWeight: 600 }}>
-                  <textPath href="#stampcircle" startOffset="0%">
-                    CUSTOM LEATHER PATCHES • BUILT FOR THE HUNT •&nbsp;
-                  </textPath>
-                </text>
-              </svg>
-            </div>
+            {/* Slow-rotating measurement ring — protractor detail, blueprint touch */}
+            <div aria-hidden className="absolute inset-[4%] rounded-full border border-dashed border-[#C7B291]/25 motion-safe:[animation:spin_46s_linear_infinite]" />
 
-            {/* Dashed inner ring — slow counter-rotation */}
-            <div aria-hidden className="absolute inset-[11%] rounded-full border border-dashed border-[#C7B291]/25 motion-safe:[animation:spin_52s_linear_infinite_reverse]" />
-
-            {/* ── The leather patch: pressed in, branded, then sewn ── */}
-            <div ref={floatRef} className="absolute inset-[15%]">
+            {/* ── The hat: exploded parts assemble, stitched, spec'd out ── */}
+            <div ref={floatRef} className="absolute inset-[10%]">
               <svg viewBox="0 0 200 200" className="w-full h-full overflow-visible">
                 <defs>
-                  <radialGradient id="leather" cx="40%" cy="32%" r="76%">
-                    <stop offset="0%" stopColor="#E4D3B0" />
-                    <stop offset="38%" stopColor="#C2A375" />
-                    <stop offset="72%" stopColor="#87663A" />
-                    <stop offset="100%" stopColor="#4C3520" />
-                  </radialGradient>
-                  <linearGradient id="bevel" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#EBDAB6" />
-                    <stop offset="48%" stopColor="#A98A5E" />
-                    <stop offset="100%" stopColor="#3E2C19" />
-                  </linearGradient>
-                  <radialGradient id="recess" cx="50%" cy="56%" r="54%">
-                    <stop offset="52%" stopColor="#241809" stopOpacity="0" />
-                    <stop offset="100%" stopColor="#1d1206" stopOpacity="0.42" />
-                  </radialGradient>
-                  <radialGradient id="scorchGrad" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#180D03" stopOpacity="0.85" />
-                    <stop offset="65%" stopColor="#180D03" stopOpacity="0.3" />
-                    <stop offset="100%" stopColor="#180D03" stopOpacity="0" />
-                  </radialGradient>
-                  <radialGradient id="heatGrad" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#FFD9A0" />
-                    <stop offset="38%" stopColor="#FF7A18" />
-                    <stop offset="100%" stopColor="#FF7A18" stopOpacity="0" />
-                  </radialGradient>
-                  <linearGradient id="sheenGrad" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#fff" stopOpacity="0" />
-                    <stop offset="50%" stopColor="#fff" stopOpacity="0.9" />
-                    <stop offset="100%" stopColor="#fff" stopOpacity="0" />
-                  </linearGradient>
-                  <filter id="discShadow" x="-40%" y="-40%" width="180%" height="180%">
-                    <feDropShadow dx="0" dy="8" stdDeviation="10" floodColor="#0b0704" floodOpacity="0.6" />
-                  </filter>
-                  <filter id="leatherGrain">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" stitchTiles="stitch" />
-                    <feColorMatrix type="saturate" values="0" />
-                    <feComponentTransfer><feFuncA type="linear" slope="0.09" /></feComponentTransfer>
-                    <feComposite operator="in" in2="SourceGraphic" />
-                  </filter>
                   <filter id="softGlow" x="-80%" y="-80%" width="260%" height="260%">
                     <feGaussianBlur stdDeviation="2.4" />
                   </filter>
-                  <clipPath id="discClip"><circle cx="100" cy="100" r="80" /></clipPath>
+                  <filter id="discShadow" x="-40%" y="-40%" width="180%" height="180%">
+                    <feDropShadow dx="0" dy="6" stdDeviation="7" floodColor="#0b0704" floodOpacity="0.55" />
+                  </filter>
                   {/* Sewing reveal: this stroke draws around and unveils the stitches */}
-                  <mask id="sew">
+                  <mask id="stitchMask">
                     <rect width="200" height="200" fill="black" />
-                    <circle ref={sewRef} cx="100" cy="100" r="73" fill="none" stroke="#fff" strokeWidth="7"
-                      pathLength={1} strokeDasharray={1} strokeDashoffset={1} transform="rotate(-90 100 100)" />
+                    <circle ref={stitchRef} cx="100" cy="148" r="27" fill="none" stroke="#fff" strokeWidth="6"
+                      pathLength={1} strokeDasharray={1} strokeDashoffset={1} transform="rotate(-90 100 148)" />
                   </mask>
                 </defs>
 
-                {/* Disc body + grain */}
-                <circle cx="100" cy="100" r="80" fill="url(#leather)" filter="url(#discShadow)" />
-                <circle cx="100" cy="100" r="80" fill="#000" filter="url(#leatherGrain)" opacity="0.5" clipPath="url(#discClip)" />
+                {/* Blueprint guide grid */}
+                <g ref={gridRef} opacity="0" stroke="#C7B291" strokeWidth="0.5">
+                  <line x1="100" y1="6" x2="100" y2="194" strokeDasharray="2 4" opacity="0.18" />
+                  <line x1="6" y1="100" x2="194" y2="100" strokeDasharray="2 4" opacity="0.18" />
+                  <line x1="6" y1="66" x2="194" y2="66" strokeDasharray="1.5 5" opacity="0.1" />
+                  <line x1="6" y1="134" x2="194" y2="134" strokeDasharray="1.5 5" opacity="0.1" />
+                </g>
 
-                {/* Raised beveled rim */}
-                <circle cx="100" cy="100" r="76.5" fill="none" stroke="url(#bevel)" strokeWidth="6" />
-                <circle cx="100" cy="100" r="80" fill="none" stroke="#3A2917" strokeWidth="1.2" opacity="0.7" />
+                {/* HUD corner frame */}
+                <g ref={bracketRef} stroke="#C7B291" strokeWidth="1" opacity="0" strokeLinecap="round">
+                  <path d="M8,22 L8,8 L22,8" fill="none" opacity="0.5" />
+                  <path d="M178,8 L192,8 L192,22" fill="none" opacity="0.5" />
+                  <path d="M192,178 L192,192 L178,192" fill="none" opacity="0.5" />
+                  <path d="M22,192 L8,192 L8,178" fill="none" opacity="0.5" />
+                </g>
 
-                {/* Specular sheen sweep (clipped to the disc) */}
-                <g clipPath="url(#discClip)">
-                  <g transform="rotate(20 100 100)" style={{ mixBlendMode: "overlay" }}>
-                    <rect ref={sheenRef} x="74" y="-30" width="42" height="260" fill="url(#sheenGrad)" opacity="0" />
+                {/* Idle blueprint scan sweep */}
+                <line ref={scanRef} x1="10" y1="0" x2="190" y2="0" stroke="#F2EEE6" strokeWidth="0.8"
+                  opacity="0" filter="url(#softGlow)" />
+
+                {/* Crown — 6-panel dome, seams radiating from the button */}
+                <g ref={crownRef} fill="none" stroke="#F2EEE6" strokeWidth="1.3" strokeLinecap="round" opacity="0">
+                  <path d="M45,126 A55,55 0 0 1 155,126" />
+                  <line x1="45" y1="126" x2="45" y2="133" />
+                  <line x1="155" y1="126" x2="155" y2="133" />
+                  <circle cx="100" cy="70" r="2.4" fill="#F2EEE6" stroke="none" />
+                  <line x1="100" y1="70" x2="48.3" y2="106.2" opacity="0.6" />
+                  <line x1="100" y1="70" x2="68.45" y2="79.95" opacity="0.6" />
+                  <line x1="100" y1="70" x2="131.55" y2="79.95" opacity="0.6" />
+                  <line x1="100" y1="70" x2="151.7" y2="106.2" opacity="0.6" />
+                </g>
+
+                {/* Brim — curved front bill */}
+                <path ref={brimRef} d="M40,131 Q100,158 165,129 Q100,148 40,131 Z"
+                  fill="#211A12" fillOpacity="0.3" stroke="#C7B291" strokeWidth="1.3" opacity="0" />
+
+                {/* Front patch — stitched, monogrammed */}
+                <g ref={patchRef} opacity="0">
+                  <circle cx="100" cy="148" r="30" fill="#2B2116" fillOpacity="0.55" stroke="#C7B291" strokeWidth="1.4" filter="url(#discShadow)" />
+                  {/* Running stitch, revealed by the mask */}
+                  <g mask="url(#stitchMask)">
+                    <circle cx="100" cy="148" r="27" fill="none" stroke="#2E2012" strokeWidth="3"
+                      strokeDasharray="2.2 4.8" strokeLinecap="round" opacity="0.45" transform="rotate(-90 100 148)" />
+                    <circle cx="100" cy="148" r="27" fill="none" stroke="#ECE0C6" strokeWidth="2"
+                      strokeDasharray="2.2 4.8" strokeLinecap="round" transform="rotate(-90 100 148)" />
+                  </g>
+                  {/* MD maker's mark */}
+                  <g ref={monogramRef} opacity="0">
+                    <image href="/md-mark.png" x="77" y="130.5" width="46" height="34.9"
+                      preserveAspectRatio="xMidYMid meet" opacity="0.85"
+                      style={{ filter: "invert(1) brightness(1.4)" }} />
                   </g>
                 </g>
 
-                {/* Tooled groove + stamped recess */}
-                <circle cx="100" cy="100" r="70" fill="none" stroke="#4A3220" strokeWidth="1.4" opacity="0.5" />
-                <circle cx="100" cy="100" r="62" fill="url(#recess)" />
-                <circle cx="100" cy="100" r="62" fill="none" stroke="#EAD8B4" strokeWidth="1" opacity="0.16" />
-
-                {/* Running stitch — recessed shadow + bone thread, revealed by the mask */}
-                <g mask="url(#sew)">
-                  <circle cx="100" cy="100" r="73" fill="none" stroke="#2E2012" strokeWidth="3.4"
-                    strokeDasharray="2.4 5.2" strokeLinecap="round" opacity="0.45" transform="rotate(-90 100 100)" />
-                  <circle cx="100" cy="100" r="73" fill="none" stroke="#ECE0C6" strokeWidth="2.4"
-                    strokeDasharray="2.4 5.2" strokeLinecap="round" transform="rotate(-90 100 100)" />
+                {/* Assembly-point flash rings */}
+                <g ref={jointsRef} opacity="0" stroke="#F2EEE6" strokeWidth="1" fill="none">
+                  <g transform="translate(100,129)">
+                    <circle r="6" opacity="0.5" />
+                    <line x1="-4" y1="0" x2="4" y2="0" />
+                    <line x1="0" y1="-4" x2="0" y2="4" />
+                  </g>
+                  <g transform="translate(100,118)">
+                    <circle r="6" opacity="0.5" />
+                    <line x1="-4" y1="0" x2="4" y2="0" />
+                    <line x1="0" y1="-4" x2="0" y2="4" />
+                  </g>
                 </g>
 
-                {/* Char left behind by the iron — permanent, very faint */}
-                <circle ref={scorchRef} cx="100" cy="101" r="42" fill="url(#scorchGrad)" opacity="0" />
-
-                {/* Branding heat bloom — rises during the burn, then cools off */}
-                <circle ref={heatRef} cx="100" cy="101" r="34" fill="url(#heatGrad)" opacity="0" filter="url(#softGlow)" />
-
-                {/* MD maker's mark — the real illustrated monogram, branded into the leather */}
-                <g ref={markRef} opacity="0" style={{ mixBlendMode: "multiply" }}>
-                  <image href="/md-mark.png" x="54" y="66" width="92" height="69.85"
-                    preserveAspectRatio="xMidYMid meet" opacity="0.94" />
+                {/* Spec callouts — leader lines draw in, labels fade after */}
+                <g ref={calloutRef} opacity="0" fontFamily="var(--font-montserrat)">
+                  <g>
+                    <line data-leader x1="138" y1="98" x2="172" y2="84" stroke="#C7B291" strokeWidth="0.8"
+                      pathLength={1} strokeDasharray={1} strokeDashoffset={1} opacity="0.55" />
+                    <text data-label x="174" y="86" fill="#C7B291" fontSize="6.4" letterSpacing="0.08em" opacity="0">
+                      6-PANEL CROWN
+                    </text>
+                  </g>
+                  <g>
+                    <line data-leader x1="42" y1="130" x2="10" y2="134" stroke="#C7B291" strokeWidth="0.8"
+                      pathLength={1} strokeDasharray={1} strokeDashoffset={1} opacity="0.55" />
+                    <text data-label x="8" y="132" textAnchor="end" fill="#C7B291" fontSize="6.4" letterSpacing="0.08em" opacity="0">
+                      PRE-CURVED BRIM
+                    </text>
+                  </g>
+                  <g>
+                    <line data-leader x1="129" y1="146" x2="168" y2="140" stroke="#C7B291" strokeWidth="0.8"
+                      pathLength={1} strokeDasharray={1} strokeDashoffset={1} opacity="0.55" />
+                    <text data-label x="170" y="142" fill="#C7B291" fontSize="6.4" letterSpacing="0.08em" opacity="0">
+                      FULL-GRAIN PATCH
+                    </text>
+                  </g>
+                  <g>
+                    <line data-leader x1="118" y1="172" x2="160" y2="190" stroke="#C7B291" strokeWidth="0.8"
+                      pathLength={1} strokeDasharray={1} strokeDashoffset={1} opacity="0.55" />
+                    <text data-label x="162" y="192" fill="#C7B291" fontSize="6.4" letterSpacing="0.08em" opacity="0">
+                      HAND-STITCHED
+                    </text>
+                  </g>
                 </g>
-
-                {/* Burn embers */}
-                <g ref={sparksRef}>
-                  <circle cx="92" cy="86" r="1.6" fill="#FFC074" />
-                  <circle cx="108" cy="92" r="1.3" fill="#FF9A3C" />
-                  <circle cx="96" cy="108" r="1.5" fill="#FFD79E" />
-                  <circle cx="110" cy="112" r="1.2" fill="#FF9A3C" />
-                  <circle cx="100" cy="80" r="1.3" fill="#FFC074" />
-                  <circle cx="89" cy="100" r="1.1" fill="#FFD79E" />
-                </g>
-
-                {/* Glowing needle point leading the stitch around the rim (build) */}
-                <g ref={needleRef} opacity="0">
-                  {/* short comet trail ending at the needle point */}
-                  <circle cx="100" cy="100" r="73" fill="none" stroke="#FFE9C2" strokeWidth="2.2"
-                    strokeLinecap="round" pathLength={1} strokeDasharray="0.05 0.95"
-                    transform="rotate(-108 100 100)" opacity="0.45" filter="url(#softGlow)" />
-                  <circle cx="100" cy="27" r="3.6" fill="#FFF4DE" filter="url(#softGlow)" />
-                  <circle cx="100" cy="27" r="1.7" fill="#fff" />
-                </g>
-
-                {/* Stamp-press shockwave */}
-                <circle ref={shockRef} cx="100" cy="100" r="48" fill="none" stroke="#E5D2A6" strokeWidth="3" opacity="0" />
               </svg>
             </div>
-
-            {/* Ember motes drifting off the leather */}
-            <span aria-hidden className="absolute left-[20%] top-[16%] w-1.5 h-1.5 rounded-full bg-[#C77B3B] opacity-0 motion-safe:[animation:emberFloat_6.5s_ease-in-out_infinite]" style={{ animationDelay: "0.3s" }} />
-            <span aria-hidden className="absolute right-[18%] top-[24%] w-1 h-1 rounded-full bg-[#C7B291] opacity-0 motion-safe:[animation:emberFloat_7.5s_ease-in-out_infinite]" style={{ animationDelay: "1.4s" }} />
-            <span aria-hidden className="absolute left-[30%] bottom-[20%] w-1 h-1 rounded-full bg-[#C77B3B] opacity-0 motion-safe:[animation:emberFloat_8s_ease-in-out_infinite]" style={{ animationDelay: "2.6s" }} />
-            <span aria-hidden className="absolute right-[26%] bottom-[26%] w-1.5 h-1.5 rounded-full bg-[#C7B291] opacity-0 motion-safe:[animation:emberFloat_7s_ease-in-out_infinite]" style={{ animationDelay: "3.7s" }} />
 
             {/* Floating spec chip */}
             <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 lg:left-auto lg:right-[2%] lg:translate-x-0 bg-[#211A12]/85 backdrop-blur-sm border border-[#6B4F33]/50 px-4 py-2.5 flex items-center gap-2.5">
