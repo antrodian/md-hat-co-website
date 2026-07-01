@@ -23,9 +23,9 @@ export default function Hero() {
   const needleRef = useRef<SVGGElement>(null);         // glowing needle point on the rim
   const shockRef = useRef<SVGCircleElement>(null);     // stamp-press shockwave
   const heatRef = useRef<SVGCircleElement>(null);      // branding heat bloom
+  const scorchRef = useRef<SVGCircleElement>(null);    // permanent char left by the iron
   const sheenRef = useRef<SVGRectElement>(null);       // specular sweep
   const sparksRef = useRef<SVGGElement>(null);         // burn embers
-  const runnerRef = useRef<SVGGElement>(null);         // perpetual needle running the seam
   const cta1Ref = useRef<HTMLAnchorElement>(null);
   const cta2Ref = useRef<HTMLAnchorElement>(null);
 
@@ -60,7 +60,8 @@ export default function Hero() {
       // Finished patch: fully tooled + sewn, heat/motion FX off.
       gsap.set(sewRef.current, { strokeDashoffset: 0 });
       gsap.set(markRef.current, { opacity: 1 });
-      gsap.set([needleRef.current, shockRef.current, heatRef.current, sheenRef.current, runnerRef.current], { opacity: 0 });
+      gsap.set(scorchRef.current, { opacity: 0.14 });
+      gsap.set([needleRef.current, shockRef.current, heatRef.current, sheenRef.current], { opacity: 0 });
       return;
     }
 
@@ -70,64 +71,62 @@ export default function Hero() {
     gsap.set(subRef.current, { opacity: 0, y: 20 });
     gsap.set(ctaRef.current, { opacity: 0, y: 16 });
     gsap.set(specRef.current, { opacity: 0, y: 12 });
-    gsap.set(productRef.current, { opacity: 0, scale: 0.7, y: 30 });
+    gsap.set(productRef.current, { opacity: 0, scale: 1.16, y: -26 });
     gsap.set(sewRef.current, { strokeDashoffset: 1 });
     gsap.set(markRef.current, { opacity: 0 });
-    gsap.set([needleRef.current, shockRef.current, heatRef.current, sheenRef.current], { opacity: 0 });
+    gsap.set([needleRef.current, shockRef.current, heatRef.current, scorchRef.current, sheenRef.current], { opacity: 0 });
 
     const sparks = sparksRef.current ? Array.from(sparksRef.current.children) : [];
     gsap.set(sparks, { opacity: 0 });
 
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-    // 1) Stamp-press — blank disc lands with overshoot, shockwave ripples out.
-    tl.to(productRef.current, { opacity: 1, scale: 1, y: 0, duration: 0.9, ease: "back.out(1.7)" }, 0.1)
+    // 1) Stamp-press — the die descends onto the leather: big and soft, then seated.
+    //    A quick squash on contact + a thin shockwave sell the weight without cartoon bounce.
+    tl.to(productRef.current, { opacity: 1, scale: 1, y: 0, duration: 0.85, ease: "power4.out" }, 0.1)
+      .to(floatRef.current, { scale: 0.972, duration: 0.09, ease: "power2.in", transformOrigin: "50% 62%" }, 0.78)
+      .to(floatRef.current, { scale: 1, duration: 0.55, ease: "elastic.out(1.2, 0.5)" }, 0.87)
       .fromTo(shockRef.current,
-        { attr: { r: 48 }, opacity: 0.6, strokeWidth: 3 },
-        { attr: { r: 104 }, opacity: 0, strokeWidth: 0.4, duration: 0.85, ease: "power2.out" }, 0.62)
+        { attr: { r: 78 }, opacity: 0.45, strokeWidth: 2 },
+        { attr: { r: 103 }, opacity: 0, strokeWidth: 0.3, duration: 0.7, ease: "power2.out" }, 0.8)
 
     // 2) Copy rises in.
       .to(eyebrowRef.current, { opacity: 1, x: 0, duration: 0.6 }, 0.4)
       .to(lines, { opacity: 1, y: 0, duration: 0.85, stagger: 0.12, ease: "power3.out" }, 0.5)
 
-    // 3) Branding iron — heat bloom rises, the MD mark burns into the leather, embers fly, then cools.
-      .to(heatRef.current, { opacity: 0.82, duration: 0.45, ease: "power2.out" }, 0.95)
+    // 3) Branding iron — heat blooms, the MD mark presses IN (scales down into the hide),
+    //    a faint char stays behind, embers lift, heat cools slowly.
+      .to(heatRef.current, { opacity: 0.75, duration: 0.4, ease: "power2.out" }, 1.05)
       .fromTo(markRef.current,
-        { opacity: 0, scale: 0.82, svgOrigin: "100 101" },
-        { opacity: 1, scale: 1, svgOrigin: "100 101", duration: 0.9, ease: "back.out(1.4)" }, 1.05)
+        { opacity: 0, scale: 1.16, svgOrigin: "100 101" },
+        { opacity: 1, scale: 1, svgOrigin: "100 101", duration: 0.85, ease: "power3.out" }, 1.15)
+      .to(scorchRef.current, { opacity: 0.14, duration: 0.7, ease: "power1.out" }, 1.25)
       .fromTo(sparks,
-        { opacity: 0.95, y: 5, scale: 1 },
-        { opacity: 0, y: -24, scale: 0.35, stagger: 0.06, duration: 0.95, ease: "power1.out" }, 1.5)
-      .to(heatRef.current, { opacity: 0, duration: 0.9, ease: "power2.out" }, 1.95)
+        { opacity: 0.85, y: 4, scale: 1 },
+        { opacity: 0, y: -20, scale: 0.4, stagger: 0.07, duration: 1.1, ease: "power1.out" }, 1.55)
+      .to(heatRef.current, { opacity: 0, duration: 1.2, ease: "power2.inOut" }, 1.9)
 
-    // 4) Needle sews the rim — a glowing point leads the stitch reveal around.
-      .set(needleRef.current, { opacity: 1 }, 2.0)
-      .to(sewRef.current, { strokeDashoffset: 0, duration: 1.25, ease: "power2.inOut" }, 2.0)
-      .to(needleRef.current, { rotation: 360, svgOrigin: "100 100", duration: 1.25, ease: "power2.inOut" }, 2.0)
-      .to(needleRef.current, { opacity: 0, duration: 0.4, ease: "power1.out" }, 3.05)
+    // 4) Needle sews the rim — one unhurried pass, glowing point leading the thread.
+      .to(needleRef.current, { opacity: 1, duration: 0.25, ease: "power1.in" }, 2.05)
+      .to(sewRef.current, { strokeDashoffset: 0, duration: 1.45, ease: "power1.inOut" }, 2.1)
+      .to(needleRef.current, { rotation: 360, svgOrigin: "100 100", duration: 1.45, ease: "power1.inOut" }, 2.1)
+      .to(needleRef.current, { opacity: 0, duration: 0.45, ease: "power1.out" }, 3.4)
 
     // 5) Remaining copy.
       .to(subRef.current, { opacity: 1, y: 0, duration: 0.7 }, 1.1)
       .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.6 }, 1.3)
       .to(specRef.current, { opacity: 1, y: 0, duration: 0.6 }, 1.5);
 
-    // ── Idle loops — keep the patch alive after the build ──
-    // Perpetual needle running the seam — the always-on "sewing" motion.
-    gsap.set(runnerRef.current, { opacity: 0 });
-    const runnerFade = gsap.to(runnerRef.current, { opacity: 1, duration: 0.7, delay: 3.3, ease: "power1.out" });
-    const runnerSpin = gsap.to(runnerRef.current, {
-      rotation: 360, svgOrigin: "100 100", duration: 5.5, ease: "none", repeat: -1, delay: 3.3,
-    });
-
-    // Specular sheen sweeping across the domed leather.
-    const sheenTl = gsap.timeline({ repeat: -1, repeatDelay: 2.8, delay: 3.4 });
-    sheenTl.fromTo(sheenRef.current, { x: -120, opacity: 0 }, { opacity: 0.58, duration: 0.35, ease: "power1.in" }, 0)
-      .to(sheenRef.current, { x: 150, duration: 1.5, ease: "sine.inOut" }, 0)
-      .to(sheenRef.current, { opacity: 0, duration: 0.45, ease: "power1.out" }, 1.05);
+    // ── Idle — quiet, occasional life. The build is the show; rest is rest. ──
+    // Specular sheen sweeping across the domed leather, rare enough to stay special.
+    const sheenTl = gsap.timeline({ repeat: -1, repeatDelay: 5.5, delay: 4.2 });
+    sheenTl.fromTo(sheenRef.current, { x: -120, opacity: 0 }, { opacity: 0.42, duration: 0.4, ease: "power1.in" }, 0)
+      .to(sheenRef.current, { x: 150, duration: 1.8, ease: "sine.inOut" }, 0)
+      .to(sheenRef.current, { opacity: 0, duration: 0.55, ease: "power1.out" }, 1.25);
 
     // Gentle 3D float so it breathes at rest.
     const floatTw = gsap.to(floatRef.current, {
-      y: -7, rotation: 1.1, duration: 3.8, ease: "sine.inOut", repeat: -1, yoyo: true, delay: 2.6,
+      y: -6, rotation: 0.8, duration: 4.6, ease: "sine.inOut", repeat: -1, yoyo: true, delay: 3.6,
     });
 
     // Cursor parallax on the product
@@ -148,8 +147,6 @@ export default function Hero() {
       tl.kill();
       sheenTl.kill();
       floatTw.kill();
-      runnerFade.kill();
-      runnerSpin.kill();
       c1?.();
       c2?.();
     };
@@ -300,6 +297,11 @@ export default function Hero() {
                     <stop offset="52%" stopColor="#241809" stopOpacity="0" />
                     <stop offset="100%" stopColor="#1d1206" stopOpacity="0.42" />
                   </radialGradient>
+                  <radialGradient id="scorchGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#180D03" stopOpacity="0.85" />
+                    <stop offset="65%" stopColor="#180D03" stopOpacity="0.3" />
+                    <stop offset="100%" stopColor="#180D03" stopOpacity="0" />
+                  </radialGradient>
                   <radialGradient id="heatGrad" cx="50%" cy="50%" r="50%">
                     <stop offset="0%" stopColor="#FFD9A0" />
                     <stop offset="38%" stopColor="#FF7A18" />
@@ -359,6 +361,9 @@ export default function Hero() {
                     strokeDasharray="2.4 5.2" strokeLinecap="round" transform="rotate(-90 100 100)" />
                 </g>
 
+                {/* Char left behind by the iron — permanent, very faint */}
+                <circle ref={scorchRef} cx="100" cy="101" r="42" fill="url(#scorchGrad)" opacity="0" />
+
                 {/* Branding heat bloom — rises during the burn, then cools off */}
                 <circle ref={heatRef} cx="100" cy="101" r="34" fill="url(#heatGrad)" opacity="0" filter="url(#softGlow)" />
 
@@ -380,17 +385,12 @@ export default function Hero() {
 
                 {/* Glowing needle point leading the stitch around the rim (build) */}
                 <g ref={needleRef} opacity="0">
+                  {/* short comet trail ending at the needle point */}
+                  <circle cx="100" cy="100" r="73" fill="none" stroke="#FFE9C2" strokeWidth="2.2"
+                    strokeLinecap="round" pathLength={1} strokeDasharray="0.05 0.95"
+                    transform="rotate(-108 100 100)" opacity="0.45" filter="url(#softGlow)" />
                   <circle cx="100" cy="27" r="3.6" fill="#FFF4DE" filter="url(#softGlow)" />
                   <circle cx="100" cy="27" r="1.7" fill="#fff" />
-                </g>
-
-                {/* Perpetual seam runner — a glowing point + comet trail forever working the rim */}
-                <g ref={runnerRef} opacity="0">
-                  <circle cx="100" cy="100" r="73" fill="none" stroke="#FFE9C2" strokeWidth="2.6"
-                    strokeLinecap="round" pathLength={1} strokeDasharray="0.06 0.94"
-                    transform="rotate(-90 100 100)" opacity="0.55" filter="url(#softGlow)" />
-                  <circle cx="100" cy="27" r="3.1" fill="#FFF4DE" filter="url(#softGlow)" />
-                  <circle cx="100" cy="27" r="1.5" fill="#fff" />
                 </g>
 
                 {/* Stamp-press shockwave */}
