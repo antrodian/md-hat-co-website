@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useInView, useMotionValue, useSpring } from "framer-motion";
+import { motion, useInView, useMotionValue, useSpring, useScroll, useTransform } from "framer-motion";
 import { Antlers, ArrowRight } from "@/components/Icons";
 import StitchSeam from "@/components/StitchSeam";
 
@@ -24,6 +24,12 @@ function HatCard({ hat, index, show }: { hat: (typeof HATS)[0]; index: number; s
   const mvY = useMotionValue(0);
   const rotateY = useSpring(mvX, { stiffness: 150, damping: 15 });
   const rotateX = useSpring(mvY, { stiffness: 150, damping: 15 });
+
+  // Image drifts opposite the page scroll inside its frame — cheap depth cue
+  // that reads as "photographed on a set", not a flat pasted-in product shot.
+  const frameRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: frameProgress } = useScroll({ target: frameRef, offset: ["start end", "end start"] });
+  const imgY = useTransform(frameProgress, [0, 1], ["-4%", "4%"]);
 
   const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -46,14 +52,16 @@ function HatCard({ hat, index, show }: { hat: (typeof HATS)[0]; index: number; s
       className="group"
     >
       <Link href="/shop" className="block cursor-pointer focus-visible:outline-none">
-        <div className="relative overflow-hidden bg-gradient-to-b from-white to-[#EDE6D8] aspect-square mb-4 border border-[#6B4F33]/12 group-hover:border-[#6A6F43]/55 transition-[border-color,box-shadow,transform] duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_24px_48px_-20px_rgba(46,37,27,0.45)] group-focus-visible:ring-2 group-focus-visible:ring-[#6A6F43]">
-          <Image
-            src={hat.img}
-            alt={`${hat.name} — ${hat.color} trucker with leather ${hat.patch} patch`}
-            fill
-            sizes="(max-width: 640px) 50vw, 25vw"
-            className="object-contain p-3 transition-transform duration-500 group-hover:scale-[1.04]"
-          />
+        <div ref={frameRef} className="relative overflow-hidden bg-gradient-to-b from-white to-[#EDE6D8] aspect-square mb-4 border border-[#6B4F33]/12 group-hover:border-[#6A6F43]/55 transition-[border-color,box-shadow,transform] duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_24px_48px_-20px_rgba(46,37,27,0.45)] group-focus-visible:ring-2 group-focus-visible:ring-[#6A6F43]">
+          <motion.div className="absolute inset-0" style={{ y: imgY }}>
+            <Image
+              src={hat.img}
+              alt={`${hat.name} — ${hat.color} trucker with leather ${hat.patch} patch`}
+              fill
+              sizes="(max-width: 640px) 50vw, 25vw"
+              className="object-contain p-3 transition-transform duration-500 group-hover:scale-[1.04]"
+            />
+          </motion.div>
 
           {hat.tag && (
             <span

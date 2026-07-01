@@ -87,6 +87,12 @@ export default function CraftProcess() {
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
   const camoY = useTransform(scrollYProgress, [0, 1], ["-7%", "7%"]);
 
+  // Connecting line and traveling spark are tied to actual scroll position through
+  // the row, not a fixed-duration reveal — the line's fill IS how far you've scrolled.
+  const { scrollYProgress: lineProgress } = useScroll({ target: gridRef, offset: ["start 88%", "end 65%"] });
+  const dotLeft = useTransform(lineProgress, [0, 1], ["0%", "100%"]);
+  const dotOpacity = useTransform(lineProgress, [0, 0.04, 0.96, 1], [0, 1, 1, 0]);
+
   return (
     <section id="process" ref={sectionRef} className="relative py-24 px-6 bg-[#2F3F2E] overflow-hidden">
       <StitchSeam />
@@ -124,11 +130,8 @@ export default function CraftProcess() {
         <div ref={gridRef} className="relative">
           <div className="hidden lg:block absolute top-0 left-0 right-0 h-px bg-[#C7B291]/12" />
           <motion.div
-            initial={{ scaleX: 0 }}
-            animate={gridInView ? { scaleX: 1 } : {}}
-            transition={{ duration: 1.6, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="hidden lg:block absolute top-0 left-0 right-0 h-px bg-[#6A6F43]"
-            style={{ transformOrigin: "left", opacity: 0.6 }}
+            style={{ transformOrigin: "left", opacity: 0.6, scaleX: lineProgress }}
           />
           <motion.div
             aria-hidden
@@ -136,10 +139,9 @@ export default function CraftProcess() {
             style={{
               background: "radial-gradient(circle, #E4E0C8 0%, #6A6F43 55%, transparent 100%)",
               boxShadow: "0 0 10px 3px rgba(106,111,67,0.7)",
+              left: dotLeft,
+              opacity: dotOpacity,
             }}
-            initial={{ left: "0%", opacity: 0 }}
-            animate={gridInView ? { left: ["0%", "100%"], opacity: [0, 1, 1, 0] } : {}}
-            transition={{ duration: 2.0, ease: "easeInOut", repeat: Infinity, repeatDelay: 3.4, delay: 1.6 }}
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">

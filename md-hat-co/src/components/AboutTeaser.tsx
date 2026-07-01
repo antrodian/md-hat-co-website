@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import StitchSeam from "@/components/StitchSeam";
 import { ArrowRight } from "@/components/Icons";
 
@@ -12,6 +12,10 @@ const STORY_IMG = "/story-turkey-hunter.jpg";
 export default function AboutTeaser() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
+
+  const frameRef = useRef(null);
+  const { scrollYProgress: frameProgress } = useScroll({ target: frameRef, offset: ["start end", "end start"] });
+  const imgY = useTransform(frameProgress, [0, 1], ["-6%", "6%"]);
 
   const quoteWords = "She couldn't find a hat worth wearing. So she made one.".split(" ");
 
@@ -27,14 +31,16 @@ export default function AboutTeaser() {
             transition={{ duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="lg:col-span-2 order-2 lg:order-1"
           >
-            <div className="relative aspect-[4/5] bg-[#F0E8DC] overflow-hidden flex items-center justify-center">
-              <Image
-                src={STORY_IMG}
-                alt="MD Hat Co. illustration — a hunter in MDHC camo kneeling behind a fanned wild turkey, EST. 2023 Tennessee"
-                fill
-                sizes="(max-width: 1024px) 100vw, 40vw"
-                className="object-contain p-4"
-              />
+            <div ref={frameRef} className="relative aspect-[4/5] bg-[#F0E8DC] overflow-hidden flex items-center justify-center">
+              <motion.div className="absolute inset-0" style={{ y: imgY }}>
+                <Image
+                  src={STORY_IMG}
+                  alt="MD Hat Co. illustration — a hunter in MDHC camo kneeling behind a fanned wild turkey, EST. 2023 Tennessee"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  className="object-contain p-4"
+                />
+              </motion.div>
               <div className="absolute top-0 left-0 w-10 h-10 border-t-2 border-l-2 border-[#6A6F43]/55" />
               <div className="absolute top-0 right-0 w-10 h-10 border-t-2 border-r-2 border-[#6A6F43]/55" />
               <div className="absolute bottom-0 left-0 w-10 h-10 border-b-2 border-l-2 border-[#6A6F43]/55" />
