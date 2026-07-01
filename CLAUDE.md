@@ -50,28 +50,30 @@ morgan hat website/
 | Framework | Next.js 14 (App Router) | TypeScript, src/ dir |
 | Styling | Tailwind CSS v4 | Brand tokens in globals.css |
 | Animation | GSAP + Framer Motion | GSAP for hero sequences, Framer for scroll |
-| Fonts | Playfair Display SC + Montserrat | Per brand guidelines |
+| Fonts | Roboto Slab + Montserrat | Per brand guidelines |
 | E-commerce | TBD | Wired in later — UI first |
 
 ### Brand Tokens
 
 | Token | Hex | Use |
 |-------|-----|-----|
-| Oxblood | `#8B1D1D` | Primary CTA, accents |
-| Saddle Brown | `#3B2314` | Body text, dark elements |
-| Leather Tan | `#C67C3D` | Highlights, hover states |
-| Cream | `#F2E9DD` | Page background, light text |
-| Charcoal | `#2B2520` | Hero background, nav |
-| Warm Gray | `#8C857C` | Secondary text |
+| Bone | `#F2EEE6` | Page background, light text |
+| Dark Brown | `#2E251B` | Primary text, dark elements |
+| Bark | `#6B4F33` | Secondary CTA, warm accents |
+| Moss | `#3E4B34` | Primary CTA |
+| Olive | `#6A6F43` | Highlights, hover states |
+| Tan | `#C7B291` | Soft highlights, borders, captions |
+| Camo Green | `#2F3F2E` | Deep surfaces |
+| Charcoal | `#3A3A3A` | Neutral dark |
 
 ### Pages Planned
 
 | Page | Status | Notes |
 |------|--------|-------|
-| Home | In progress | Hero animation, featured hats, process, CTA |
-| Shop | Pending | Product grid, filters |
-| About | Pending | Craftsmanship story |
-| Custom Order | Pending | Form-based custom patch request |
+| Home | Done | Hero, TrustFeatures, FeaturedHats, CraftProcess, AboutTeaser, CTABanner, Footer |
+| Shop | Done | Product grid with filters + sort (`ShopGrid.tsx`) |
+| About | Done | Full story page at `/about` — hero, origin story, values, founder quote |
+| Custom Order | Done | Form-based custom patch request (`CustomOrderForm.tsx`) |
 
 ### Brand Assets
 
@@ -104,7 +106,7 @@ morgan hat website/
 
 - **Colors:** Never use default Tailwind palette (indigo-500, blue-600, etc.). Use brand tokens only.
 - **Shadows:** Never flat `shadow-md`. Use layered, color-tinted shadows with low opacity.
-- **Typography:** Never same font for headings and body. Playfair Display SC for headings, Montserrat for body. Tight tracking (`-0.03em`) on large headings, generous line-height (`1.7`) on body.
+- **Typography:** Never same font for headings and body. Roboto Slab for headings, Montserrat for body. Tight tracking (`-0.03em`) on large headings, generous line-height (`1.7`) on body.
 - **Gradients:** Layer multiple radial gradients. Add grain/texture via SVG noise filter for depth.
 - **Animations:** Only animate `transform` and `opacity`. Never `transition-all`. Use spring-style easing.
 - **Interactive states:** Every clickable element needs hover, focus-visible, and active states. No exceptions.

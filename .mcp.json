@@ -4,6 +4,16 @@
       "type": "stdio",
       "command": "node",
       "args": ["/Users/andrewmillwood/Desktop/morgan hat website/.base/base-mcp/index.js"]
+    },
+    "obsidian": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["mcp-obsidian"],
+      "env": {
+        "OBSIDIAN_API_KEY": "${OBSIDIAN_API_KEY}",
+        "OBSIDIAN_HOST": "127.0.0.1",
+        "OBSIDIAN_PORT": "27124"
+      }
     }
   }
 }

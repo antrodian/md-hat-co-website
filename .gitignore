@@ -25,3 +25,9 @@ npm-debug.log*
 
 # Build info
 md-hat-co/tsconfig.tsbuildinfo
+
+# Obsidian vault (local workspace state)
+.obsidian/
+
+# graphify knowledge graph (generated, regenerate with /graphify)
+graphify-out/

@@ -2,34 +2,18 @@
 
 import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Antlers, ArrowRight } from "@/components/Icons";
+import { useCart } from "@/lib/cart/CartContext";
+import type { Hat } from "@/lib/types";
 
-const SOLO = "/products/ChatGPT Image Jun 29, 2026 at 02_00_31 PM.png";
-const TRIO = "/products/ChatGPT Image Jun 29, 2026 at 02_00_35 PM.png";
-
-type Hat = {
-  id: number;
-  name: string;
-  patch: "Antler" | "Duck" | "Custom";
-  price: number;
-  style: "Trucker" | "Structured" | "Snapback";
-  img: string;
-  tag?: "Bestseller" | "New" | "Custom";
-};
-
-// Demo catalog — the blaze duck-camo trucker is the live SKU; more patch
-// designs, cap styles, and photography drop into this list as they ship.
-const HATS: Hat[] = [
-  { id: 1, name: "The Blaze 112", patch: "Antler", price: 42, style: "Trucker",    img: SOLO, tag: "Bestseller" },
-  { id: 2, name: "Backcountry",   patch: "Antler", price: 42, style: "Trucker",    img: TRIO },
-  { id: 3, name: "Marsh King",    patch: "Duck",   price: 44, style: "Trucker",    img: SOLO, tag: "New" },
-  { id: 4, name: "The Drifter",   patch: "Custom", price: 48, style: "Snapback",   img: TRIO, tag: "Custom" },
-  { id: 5, name: "Timberline",    patch: "Antler", price: 44, style: "Structured", img: SOLO },
-  { id: 6, name: "Flyway",        patch: "Duck",   price: 44, style: "Trucker",    img: TRIO },
-  { id: 7, name: "High Ridge",    patch: "Antler", price: 46, style: "Structured", img: SOLO, tag: "New" },
-  { id: 8, name: "Homestead",     patch: "Custom", price: 48, style: "Snapback",   img: TRIO, tag: "Custom" },
+// Fallback demo catalog — shown only if Supabase isn't configured yet, so the
+// shop page never renders empty during setup.
+export const DEMO_HATS: Hat[] = [
+  { id: "demo-1", name: "The Blaze 112", patch: "Antler", price: 42, style: "Trucker",    image_url: "/products/ChatGPT Image Jun 29, 2026 at 02_00_31 PM.png", qty_on_hand: 3, tag: "Bestseller", active: true },
+  { id: "demo-2", name: "Backcountry",   patch: "Antler", price: 42, style: "Trucker",    image_url: "/products/ChatGPT Image Jun 29, 2026 at 02_00_35 PM.png", qty_on_hand: 5, tag: null, active: true },
+  { id: "demo-3", name: "Marsh King",    patch: "Duck",   price: 44, style: "Trucker",    image_url: "/products/ChatGPT Image Jun 29, 2026 at 02_00_31 PM.png", qty_on_hand: 2, tag: "New", active: true },
+  { id: "demo-4", name: "Timberline",    patch: "Antler", price: 44, style: "Structured", image_url: "/products/ChatGPT Image Jun 29, 2026 at 02_00_31 PM.png", qty_on_hand: 4, tag: null, active: true },
 ];
 
 const PATCHES = ["All", "Antler", "Duck", "Custom"] as const;
@@ -37,6 +21,17 @@ const STYLES = ["All", "Trucker", "Structured", "Snapback"] as const;
 const SORTS = ["Featured", "Price: Low to High", "Price: High to Low"] as const;
 
 function HatCard({ hat }: { hat: Hat }) {
+  const { addItem } = useCart();
+  const [added, setAdded] = useState(false);
+  const soldOut = hat.qty_on_hand <= 0;
+
+  const handleAdd = () => {
+    if (soldOut) return;
+    addItem({ hatId: hat.id, name: hat.name, price: hat.price, image: hat.image_url });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1400);
+  };
+
   return (
     <motion.div
       layout
@@ -50,17 +45,17 @@ function HatCard({ hat }: { hat: Hat }) {
       }}
       className="group"
     >
-      <Link href="/custom-order" className="block cursor-pointer focus-visible:outline-none">
-        <div className="relative overflow-hidden bg-gradient-to-b from-white to-[#EDE6D8] aspect-[4/5] mb-4 border border-[#6B4F33]/12 group-hover:border-[#6A6F43]/55 transition-[border-color,box-shadow,transform] duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_24px_48px_-20px_rgba(46,37,27,0.45)] group-focus-visible:ring-2 group-focus-visible:ring-[#6A6F43]">
+      <div className="block focus-visible:outline-none">
+        <div className="relative overflow-hidden bg-gradient-to-b from-white to-[#EDE6D8] aspect-[4/5] mb-4 border border-[#6B4F33]/12 group-hover:border-[#6A6F43]/55 transition-[border-color,box-shadow,transform] duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_24px_48px_-20px_rgba(46,37,27,0.45)]">
           <Image
-            src={hat.img}
-            alt={`${hat.name} — blaze camo ${hat.style.toLowerCase()} with leather ${hat.patch.toLowerCase()} patch`}
+            src={hat.image_url}
+            alt={`${hat.name} — ${hat.style.toLowerCase()} with leather ${hat.patch.toLowerCase()} patch`}
             fill
             sizes="(max-width: 640px) 50vw, 33vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+            className={`object-cover transition-transform duration-500 group-hover:scale-[1.04] ${soldOut ? "opacity-50 grayscale" : ""}`}
           />
 
-          {hat.tag && (
+          {hat.tag && !soldOut && (
             <span
               className={`absolute top-3 left-3 text-[9px] tracking-[0.2em] uppercase font-semibold px-2.5 py-1 text-[#F2EEE6] ${
                 hat.tag === "New" ? "bg-[#6A6F43]" : hat.tag === "Custom" ? "bg-[#6B4F33]" : "bg-[#3E4B34]"
@@ -71,12 +66,26 @@ function HatCard({ hat }: { hat: Hat }) {
             </span>
           )}
 
-          <div
-            className="absolute bottom-0 left-0 right-0 bg-[#3E4B34] text-[#F2EEE6] flex items-center justify-center gap-2 py-3 text-xs tracking-[0.15em] uppercase translate-y-full group-hover:translate-y-0"
-            style={{ fontFamily: "var(--font-montserrat)", transition: "transform 0.42s cubic-bezier(0.34,1.56,0.64,1)" }}
+          {soldOut && (
+            <span
+              className="absolute top-3 left-3 text-[9px] tracking-[0.2em] uppercase font-semibold px-2.5 py-1 bg-[#2E251B] text-[#F2EEE6]"
+              style={{ fontFamily: "var(--font-montserrat)" }}
+            >
+              Sold Out
+            </span>
+          )}
+
+          <button
+            onClick={handleAdd}
+            disabled={soldOut}
+            className={`absolute bottom-0 left-0 right-0 flex items-center justify-center gap-2 py-3 text-xs tracking-[0.15em] uppercase translate-y-full group-hover:translate-y-0 cursor-pointer disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C7B291] ${
+              added ? "bg-[#6A6F43] text-[#F2EEE6]" : "bg-[#3E4B34] text-[#F2EEE6] hover:bg-[#6A6F43]"
+            }`}
+            style={{ fontFamily: "var(--font-montserrat)", transition: "transform 0.42s cubic-bezier(0.34,1.56,0.64,1), background-color 0.2s" }}
           >
-            View Hat <ArrowRight className="w-4 h-4" />
-          </div>
+            {soldOut ? "Sold Out" : added ? "Added ✓" : "Add to Cart"}
+            {!soldOut && !added && <ArrowRight className="w-4 h-4" />}
+          </button>
         </div>
 
         <div className="px-0.5">
@@ -101,7 +110,7 @@ function HatCard({ hat }: { hat: Hat }) {
             {hat.patch} Patch · {hat.style}
           </p>
         </div>
-      </Link>
+      </div>
     </motion.div>
   );
 }
@@ -142,7 +151,7 @@ function FilterRow({
   );
 }
 
-export default function ShopGrid() {
+export default function ShopGrid({ hats }: { hats: Hat[] }) {
   const [patch, setPatch] = useState<string>("All");
   const [style, setStyle] = useState<string>("All");
   const [sort, setSort] = useState<string>("Featured");
@@ -151,13 +160,13 @@ export default function ShopGrid() {
   const headInView = useInView(headRef, { once: true, margin: "-40px" });
 
   const filtered = useMemo(() => {
-    let list = HATS.filter(
+    let list = hats.filter(
       (h) => (patch === "All" || h.patch === patch) && (style === "All" || h.style === style),
     );
     if (sort === "Price: Low to High") list = [...list].sort((a, b) => a.price - b.price);
     if (sort === "Price: High to Low") list = [...list].sort((a, b) => b.price - a.price);
     return list;
-  }, [patch, style, sort]);
+  }, [hats, patch, style, sort]);
 
   const clearFilters = () => { setPatch("All"); setStyle("All"); setSort("Featured"); };
 

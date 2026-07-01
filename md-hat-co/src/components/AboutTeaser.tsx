@@ -7,7 +7,7 @@ import { motion, useInView } from "framer-motion";
 import StitchSeam from "@/components/StitchSeam";
 import { ArrowRight } from "@/components/Icons";
 
-const STORY_IMG = "/antler-logo.jpg";
+const STORY_IMG = "/story-turkey-hunter.jpg";
 
 export default function AboutTeaser() {
   const ref = useRef(null);
@@ -30,10 +30,10 @@ export default function AboutTeaser() {
             <div className="relative aspect-[4/5] bg-[#F0E8DC] overflow-hidden flex items-center justify-center">
               <Image
                 src={STORY_IMG}
-                alt="MD Hat Company antler monogram — hand-drawn MD letterforms with hunting scene"
+                alt="MD Hat Co. illustration — a hunter in MDHC camo kneeling behind a fanned wild turkey, EST. 2023 Tennessee"
                 fill
                 sizes="(max-width: 1024px) 100vw, 40vw"
-                className="object-contain p-6"
+                className="object-contain p-4"
               />
               <div className="absolute top-0 left-0 w-10 h-10 border-t-2 border-l-2 border-[#6A6F43]/55" />
               <div className="absolute top-0 right-0 w-10 h-10 border-t-2 border-r-2 border-[#6A6F43]/55" />
@@ -103,7 +103,7 @@ export default function AboutTeaser() {
               className="flex justify-center lg:justify-start"
             >
               <Link
-                href="/#story"
+                href="/about"
                 className="group inline-flex items-center gap-3 text-[#2E251B] text-xs tracking-[0.24em] uppercase font-semibold border-b border-[#6A6F43] pb-1 hover:text-[#6A6F43] cursor-pointer transition-colors duration-300 focus-visible:outline-none focus-visible:text-[#6A6F43]"
                 style={{ fontFamily: "var(--font-montserrat)" }}
               >

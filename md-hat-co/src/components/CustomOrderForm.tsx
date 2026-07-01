@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ArrowRight } from "@/components/Icons";
+import { CUSTOM_HAT_PRICE } from "@/lib/constants";
 
 type FormData = {
   name: string;
@@ -35,46 +36,31 @@ const legendClass =
 
 export default function CustomOrderForm() {
   const [form, setForm] = useState<FormData>(INITIAL);
-  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const set = (field: keyof FormData) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/checkout/custom", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.url) throw new Error(data.error ?? "Something went wrong");
+      window.location.href = data.url;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+      setLoading(false);
+    }
   };
-
-  if (submitted) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center px-6 py-24 bg-[#211A12]">
-        <div className="text-center max-w-md">
-          <div className="w-16 h-px bg-[#6A6F43] mx-auto mb-8" />
-          <h2
-            className="text-[#F2EEE6] text-3xl font-black uppercase tracking-tight mb-4"
-            style={{ fontFamily: "var(--font-roboto-slab)" }}
-          >
-            Order Received.
-          </h2>
-          <p
-            className="text-[#F2EEE6]/60 text-sm leading-[1.8] mb-8"
-            style={{ fontFamily: "var(--font-montserrat)" }}
-          >
-            We&apos;ll review your order and reach out to {form.email} within 48
-            hours to confirm the details and get your custom patch started.
-          </p>
-          <button
-            onClick={() => { setForm(INITIAL); setSubmitted(false); }}
-            className="text-[#C7B291] text-xs tracking-[0.24em] uppercase border-b border-[#6B4F33] hover:border-[#6A6F43] hover:text-[#F2EEE6] transition-colors duration-200 cursor-pointer"
-            style={{ fontFamily: "var(--font-montserrat)" }}
-          >
-            Submit Another Order
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <form onSubmit={handleSubmit} className="max-w-3xl mx-auto px-6 py-16">
@@ -196,19 +182,26 @@ export default function CustomOrderForm() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
         <button
           type="submit"
-          className="group inline-flex items-center gap-3 bg-[#3E4B34] hover:bg-[#6A6F43] text-[#F2EEE6] px-10 py-4 text-xs tracking-[0.18em] uppercase font-semibold transition-colors duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C7B291] focus-visible:ring-offset-2 focus-visible:ring-offset-[#211A12]"
+          disabled={loading}
+          className="group inline-flex items-center gap-3 bg-[#3E4B34] hover:bg-[#6A6F43] disabled:opacity-60 text-[#F2EEE6] px-10 py-4 text-xs tracking-[0.18em] uppercase font-semibold transition-colors duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C7B291] focus-visible:ring-offset-2 focus-visible:ring-offset-[#211A12]"
           style={{ fontFamily: "var(--font-montserrat)" }}
         >
-          Submit Order Request
+          {loading ? "Redirecting to Payment..." : `Pay & Submit Order — $${CUSTOM_HAT_PRICE * (Number(form.quantity) || 1)}`}
           <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
         </button>
         <p
           className="text-[#F2EEE6]/45 text-xs leading-relaxed"
           style={{ fontFamily: "var(--font-montserrat)" }}
         >
-          We review every request personally and follow up within 48 hours.
+          Full payment is collected now. We review every design personally and
+          follow up within 48 hours to confirm details before production.
         </p>
       </div>
+      {error && (
+        <p className="text-[#C7B291] text-sm mt-6" style={{ fontFamily: "var(--font-montserrat)" }}>
+          {error}
+        </p>
+      )}
     </form>
   );
 }

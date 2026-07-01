@@ -4,17 +4,19 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Logo from "@/components/Logo";
 import { Search, Cart, ArrowRight } from "@/components/Icons";
+import { useCart } from "@/lib/cart/CartContext";
 
 const NAV = [
   { label: "Shop Hats", href: "/shop" },
   { label: "Custom Patches", href: "/custom-order" },
-  { label: "About", href: "/#story" },
+  { label: "About", href: "/about" },
   { label: "Contact", href: "/#contact" },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { count } = useCart();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -56,12 +58,18 @@ export default function Navbar() {
           >
             <Search className="w-[19px] h-[19px]" />
           </button>
-          <button
+          <Link
+            href="/cart"
             aria-label="Cart"
             className="relative grid place-items-center w-10 h-10 rounded-full text-[#F2EEE6]/80 hover:text-[#F2EEE6] hover:bg-[#F2EEE6]/8 transition-colors duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6A6F43]"
           >
             <Cart className="w-[21px] h-[21px]" />
-          </button>
+            {count > 0 && (
+              <span className="absolute top-0.5 right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-[#6A6F43] text-[#F2EEE6] text-[9px] font-bold grid place-items-center leading-none">
+                {count}
+              </span>
+            )}
+          </Link>
 
           {/* Primary CTA — moss, per brand UI */}
           <Link

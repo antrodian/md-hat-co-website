@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Roboto_Slab, Montserrat } from "next/font/google";
+import { CartProvider } from "@/lib/cart/CartContext";
 import "./globals.css";
 
 // Heading face — robust slab, the closest Google Fonts match to the brand's
@@ -30,7 +31,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${robotoSlab.variable} ${montserrat.variable} h-full`}>
-      <body className="min-h-full flex flex-col antialiased">{children}</body>
+      <body className="min-h-full flex flex-col antialiased">
+        <CartProvider>{children}</CartProvider>
+      </body>
     </html>
   );
 }
